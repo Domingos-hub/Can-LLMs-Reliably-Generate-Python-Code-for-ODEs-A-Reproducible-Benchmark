@@ -1,0 +1,6655 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb} % Required for inserting images
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage[a4paper,landscape,margin=1.2cm]{geometry}
+\usepackage{pdflscape}   % Para página em modo paisagem (horizontal)
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage{longtable}   % Para tabelas que quebram entre páginas
+\title{Dataset 2026}
+\author{Domingos Samanjata}
+\date{January 2026}
+
+\begin{document}
+
+\maketitle
+
+
+
+
+
+
+% Configuração para tabelas longas
+\setlength{\LTcapwidth}{\textwidth}
+\setlength{\tabcolsep}{7pt} % Espaçamento entre colunas
+\renewcommand{\arraystretch}{1.5} % Ajusta a altura das linhas
+\begin{longtable}{|p{0.3cm}|p{2,5cm}|p{10cm}|p{9,5cm}|p{1.5cm}|}
+\hline
+\textbf{ID} & \textbf{Question} & \textbf{Proposed Solution} & \textbf{Python Code} & \textbf{A} \\
+\hline
+\endfirsthead
+
+
+% conteúdo da tabela
+
+
+% Linha 1
+        0         &     A person places \$5000 in an account that accrues interest compounded continuously. 
+Assuming no additional deposits or withdrawals, how much will be in the account after 
+seven years if the interest rate is a constant 8.5 percent for the first four years and 
+a constant 9.25 percent for the last three years?             & Let \(A(t)\) denote the amount of money in the account after \(t\) years.
+
+For continuously compounded interest, the amount satisfies the differential equation
+
+\[
+\frac{dA}{dt}=rA,
+\]
+
+where \(r\) is the annual interest rate.
+During the first four years, the interest rate is $r=0.085.$
+Thus, $\frac{dA}{dt}=0.085A,$
+with the initial condition
+
+$A(0)=5000.$
+Separating the variables,
+$\frac{dA}{A}=0.085\,dt.$
+Integrating both sides,
+$\ln|A|=0.085t+C.$
+
+Exponentiating, $A=Ce^{0.085t}.$
+Using the initial condition, $5000=Ce^{0},$
+we obtain
+$C=5000.$
+Hence, the amount in the account during the first four years is
+
+$A(t)=5000e^{0.085t}, \qquad 0\le t\le4.$
+After four years,
+$A(4)=5000e^{0.085(4)}
+     =5000e^{0.34}.$
+For the last three years, the interest rate changes to
+$r=0.0925.$
+The amount at \(t=4\) becomes the initial amount for this interval. Therefore, $A(t)=A(4)e^{0.0925(t-4)}, \qquad 4\le t\le7.$
+Substituting the value of \(A(4)\),
+$A(t)=5000e^{0.34}e^{0.0925(t-4)}.$
+At the end of seven years,
+$A(7)=5000e^{0.34}e^{0.0925(3)}
+     =5000e^{0.6175}.$
+Using
+$e^{0.6175}\approx1.854278, $
+we obtain $A(7)\approx5000(1.854278)
+      \approx9271.44.$   &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def population_growth(t, y):
+    return [0.44 * y[0]]
+
+sol = solve_ivp(population_growth, [0, 8], [5], t_eval=[8])
+resultado = round(sol.y[0][0], 5)
+print(resultado)
+\end{verbatim}
+&     9271.44            \\ \hline
+% Linha 2
+    1             &  A bacteria culture is known to grow at a rate proportional to the amount present. After one hour, 1000 strands of the bacteria are observed in the culture; and after four hours, 3000 strands. Find the approximate number of strands of the bacteria originally in the culture.         &  Let $N(t)$ denote the number of bacteria strands in the culture at time $t$.
+We have,
+\[
+\frac{dN}{dt} - kN = 0,
+\]
+which is both linear and separable. Its solution is
+\[
+N(t) = ce^{kt}.
+\]
+At $t = 1$, $N = 1000$; hence,
+$$
+1000 = ce^{k}.
+$$
+
+At $t = 4$, $N = 3000$; hence,
+$$
+3000 = ce^{4k}.
+$$
+
+Solving  for $k$ and $c$, we have
+\[k = \frac{1}{3}\ln 3 = 0.366 \quad\] and  \[\quad c = 1000e^{-0.366} = 694.\]
+
+Substituting these values of $k$ and $c$ into (1), we obtain
+$$
+N(t) = 694e^{0.366t},
+$$
+as an expression for the amount of the bacteria present at any time $t$.We require $N$ at $t = 0$. Substituting $t = 0$ into (4), we obtain
+$$
+N(0) = 694e^{0.366(0)} = 694.
+$$&
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def bacteria_growth(t, y):
+    return [0.366 * y[0]]
+
+N0 = 1000 * np.exp(-0.366)
+
+sol = solve_ivp(bacteria_growth, [0, 4], [N0], t_eval=[4])
+resultado = round(N0, 0)
+print(int(resultado))
+\end{verbatim}&  694              \\ \hline
+% Linha 3
+     2 & The population of the municipality of Sambo, Angola, is known to increase at a rate proportional to the number of people currently living in the municipality. If the population doubles after two years and reaches 20,000 after three years, estimate the initial population of Sambo?                 & 
+
+Let \( N \) denote the number of people living in Sambo, Angola, at any time \( t \), and let \( N_0 \) denote the number of people initially living in Sambo. We have,
+
+\[
+\frac{dN}{dt} - kN = 0
+\]
+
+which has the solution
+
+\[
+N = ce^{kt}
+\]
+
+At \( t = 0 \), \( N = N_0 \); hence, it follows from (1) that \( N_0 = ce^{k(0)} \), or that \( c = N_0 \). Thus,
+
+\[
+N = N_0 e^{kt}
+\]
+
+At \( t = 2 \), \( N = 2N_0 \). Substituting these values  we have
+
+\[
+2N_0 = N_0 e^{2k} \quad\] from which  \[\quad k = \frac{1}{2} \ln 2 \approx 0.34657
+\]
+
+Substituting this value  gives
+
+\[
+N = N_0 e^{0.34657t}
+\]
+
+At \( t = 3 \), \( N = 20{,}000 \). Substituting these values , we obtain
+
+$$20000 = N_0 e^{(0.34657)(3)} = N_0 (2.82843) $$ or $$ N_0 \approx 7071.07$$& 
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def population_growth(t, y):
+    return [(np.log(2) / 2) * y[0]]
+
+N_0 = 20000 / np.exp((np.log(2) / 2) * 3)
+
+sol = solve_ivp(population_growth, [0, 3], [N_0], t_eval=[3])
+resultado = round(N_0, 0)
+print(resultado)
+\end{verbatim}& 7071               \\ \hline
+% Linha 4
+    3 & A certain radioactive material is known to decay at a rate proportional to the amount present. If initially there are $50$ milligrams of the material present and after two hours it is observed that the material has
+lost $10\%$ of its original mass, find the mass of the material after four hours.   & 
+
+Let \( N \) denote the amount of material present at time \( t \). Then, from (7.1),
+
+\[
+\frac{dN}{dt} - kN = 0
+\]
+
+This differential equation is separable and linear; its solution is
+
+\[
+N = ce^{kt}
+\]
+
+At \( t = 0 \), we are given that \( N = 50 \). Therefore, from (1), \( 50 = ce^{k(0)} \), or \( c = 50 \). Thus,
+
+\[
+N = 50 e^{kt}
+\]
+
+At \( t = 2 \), 10 percent of the original mass of 50 mg, or 5 mg, has decayed. Hence, at \( t = 2 \), \( N = 50 - 5 = 45 \).
+
+Substituting these values into (2) and solving for \( k \), we have
+
+\[
+45 = 50e^{2k} \quad \] or rather \[\quad k = \frac{1}{2} \ln \frac{45}{50} = -0.053
+\]
+
+Substituting this value into (2), we obtain the amount of mass present at any time \( t \) as
+
+\[
+N = 50 e^{-0.053t}
+\]
+
+where \( t \) is measured in hours.
+
+We require \( N \) at \( t = 4 \). Substituting \( t = 4 \) into (3) and then solving for \( N \), we find that
+
+\[
+N = 50e^{-0.053 \cdot 4} = 50 (0.809) = 40.5 mg
+\]
+
+       & 
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def radioactive_decay(t, y):
+    return [-0.053 * y[0]]
+
+sol = solve_ivp(radioactive_decay, [0, 4], [50], t_eval=[4])
+resultado = round(sol.y[0][0], 1)
+print(resultado)
+\end{verbatim}&    40.5              \\ \hline
+% Linha 5
+       4          &   A body at a temperature of $50^\circ$F is placed outdoors where the temperature is $100^\circ$F. If after $5$ minutes the temperature of the body is $60^\circ$F, find how long it will take the body to reach a temperature of $75^\circ$F.
+
+          & Let \( T \) denote the temperature of the body and let \( T_m \) denote the temperature of the surrounding medium. Then the time rate of change of the temperature of the body is \( dT/dt \), and Newton’s law of cooling can be formulated as  
+\[
+dT/dt = -k(T - T_m) \Rightarrow \frac{dT}{dt} + kT = kT_m
+\]
+Let  $T_m = 100$  (the surrounding medium is the outside air), we have
+\[
+\frac{dT}{dt} + kT = 100k.
+\]
+which is a  differential equation linear. Solving using the integrating factor method, we have
+$T = ce^{-kt} + 100$
+
+Since \( T = 50 \) when \( t = 0 \), it follows  that \( 50 = ce^{-k(0)} + 100 \), or \( c = -50 \). Substituting this value, we obtain
+
+$T = -50e^{-kt} + 100$
+
+At \( t = 5 \), we are given that \( T = 60 \); hence, from above, we have, \( 60 = -50e^{-5k} + 100 \). Solving for \( k \), we obtain
+\[
+-40 = -50e^{-5k} \quad\] or rather \[\quad k = \frac{-1}{5} \ln \frac{40}{50} = \frac{-1}{5}(-0.223) = 0.045
+\]
+
+Substituting this value, we obtain the temperature of the body at any time \( t \) as
+
+$T = -50e^{-0.045t} + 100$
+
+(a) We require \( t \) when \( T = 75 \). Substituting \( T = 75 \), we have
+$75 = -50e^{-0.045t} + 100 \quad$ or rather \[\quad e^{-0.045t} = \frac{1}{2}
+\]
+Solving for \( t \), we find
+$-0.045t = \ln \frac{1}{2} \quad $or rather \[\quad t = 15.5  min
+\]
+           &\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def body_temperature(t, y):
+    return [0.044629 * (100 - y[0])]
+
+sol = solve_ivp(body_temperature, [0, 20], [50],
+                t_eval=np.linspace(0, 20, 1000))
+
+temperatures = sol.y[0]
+times = sol.t
+
+idx = np.argmin(np.abs(temperatures - 75))
+resultado = round(times[idx], 1)
+
+print(resultado)
+\end{verbatim}&  15.5                \\ \hline
+% Linha 6
+     5            &     A body at an unknown temperature is placed in a room which is held at a constant temperature of \( 30^\circ \)F.  
+If after 10 minutes the temperature of the body is \( 0^\circ \) F and after 20 minutes the temperature of the body is \( 15^\circ \)F, find the unknown initial temperature.              & Let \( T \) denote the temperature of the body. Then the time rate of change of the temperature of the body is \( dT/dt \), and Newton’s law of cooling can be formulated as  
+\[
+dT/dt = -k(T - T_m), \Rightarrow \frac{dT}{dt} + kT = kT_m
+\]
+Let  $T_m = 30$ (constant temperature of the room),  
+\[
+\frac{dT}{dt} + kT = 30k
+\]
+
+Solving, we obtain  
+
+$T = ce^{-kt} + 30$
+
+
+At \( t = 10 \), we are given that \( T = 0 \). Hence, from (1),  
+\[
+0 = ce^{-10k} + 30 \quad \Rightarrow \quad ce^{-10k} = -30
+\]
+
+At \( t = 20 \), we are given that \( T = 15 \). Hence, from (1) again,  
+\[
+15 = ce^{-20k} + 30 \quad \Rightarrow \quad ce^{-20k} = -15 
+\]
+
+Solving  for \( k \) and \( c \) using the above two equations, we find  
+\[
+k = \frac{1}{10} \ln 2 = 0.069 \quad\] and   \[\quad c = -30e^{10k} = -30(2) = -60
+\]
+Substituting these values of  \( k \) and \( c \) , we have 
+$T = -60e^{-0.069t} + 30$
+
+Since we require \( T \) at the initial time \( t = 0 \), it follows  that
+
+\[
+T_0 = -60e^{(-0.069)(0)} + 30 = -60 + 30 = -30^\circ \, F
+\]
+
+  &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def newton_cooling(t, y):
+    return [-0.069 * (y[0] - 30)]
+
+T0 = -60 + 30
+
+sol = solve_ivp(newton_cooling, [0, 20], [T0], t_eval=[20])
+resultado = round(T0, 0)
+print(resultado)
+\end{verbatim}& -30                \\ \hline
+% Linha 7
+   6              & A steel ball weighing 2 lb is dropped from a height of 3000 ft with no velocity. As it falls, the ball encounters air resistance numerically equal to \( \frac{v}{8} \) (in pounds), where \( v \) denotes the velocity of the ball (in feet per second). Find the time required for the ball to hit the ground.
+
+
+                & Using Newton’s second law of motion, the net force acting on a body is equal to the time rate of change of the momentum of the body; or, for constant mass, is given by 
+\[ mg - kv = m \frac{dv}{dt} \Rightarrow  \frac{dv}{dt} + \frac{k}{m}v = g\],  where \( F \) is the net force on the body and \( v \) is the velocity of the body, both at time \( t \) and if air resistance is negligible or nonexistent, then \( k = 0 \). The ground is situated at \( x = 3000 \). Here \( w = 2 \,lb \) and \( k = 1/8 \). Assuming gravity \( g \) is \( 32 \,{ft/sec}^2 \), we have from the formula \( w = mg \) that \( 2 = m(32) \) or that the mass of the ball is \( m = 1/16 \, slug \). Hence $\frac{dv}{dt} + 2v = 32$ and solving using the method of integrating factor, we have  
+$v(t) = ce^{-2t} + 16 $
+At \( t = 0 \), we are given that \( v = 0 \). Substituting these values  , we obtain $0 = ce^{-2(0)} + 16 = c + 16$
+from which we conclude that \( c = -16 \) and $ v(t) = -16e^{-2t} + 16 $
+
+ To find the time it takes for the ball to hit the ground (\( x = 3000 \)), we need an expression for the position of the ball at any time \( t \). Since \( v = dx/dt \),  can be rewritten as $\frac{dx}{dt} = -16e^{-2t} + 16$
+
+Integrating both sides of this last equation directly with respect to \( t \), we have $x(t) = 8e^{-2t} + 16t + c_1 $
+
+where \( c_1 \) denotes a constant of integration. At \( t = 0 \), \( x = 0 \). Substituting these values, we obtain
+$0 = 8e^{-2(0)} + 16(0) + c_1 = 8 + c_1$
+
+from which we conclude that \( c_1 = -8 \) and $x(t) = 8e^{-2t} + 16t - 8$
+
+The ball hits the ground when \( x(t) = 3000 \). Substituting this value in the equation above, we have
+$3000 = 8e^{-2t} + 16t - 8 \Rightarrow 376 = e^{-2t} + 2t $
+Although $ 376 = e^{-2t} + 2t$ cannot be solved explicitly for \( t \), we can approximate the solution by trial and error, substituting different values of \( t \)  until we locate a solution to the degree of accuracy we need. Alternatively, we note that for any large value of \( t \), the negative exponential term will be negligible. A good approximation is obtained by setting $ 2t = 376$ which implies $t = 188$ sec. 
+          &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def falling_ball(t, y):
+    x, v = y
+    return [v, 32 - 2 * v]
+
+def hit_ground(t, y):
+    return y[0] - 3000
+
+hit_ground.terminal = True
+hit_ground.direction = 1
+
+sol = solve_ivp(
+    falling_ball,
+    [0, 188],
+    [0, 0],
+    events=hit_ground,
+    t_eval=np.linspace(0, 188, 1000)
+)
+
+resultado = round(sol.t_events[0][0], 0)
+print(int(resultado))
+\end{verbatim}&     188          \\ \hline
+% Linha 8
+      7 & A tank initially holds $100$ gallons of a brine solution containing $1$ pound of salt. At $t = 0$, another brine solution containing $1$ pound of salt per gallon is poured into the tank at a rate of $3$ gallons per minute, while the well stirred mixture leaves the tank at the same rate. Determine how long it takes for the amount of salt in the tank to reach 2 pounds.               &Let $Q(t)$ be the amount of salt in the tank, measured in pounds, at time $t$, where $t$ is measured in minutes.The rate of change of the amount of salt in the tank is given by
+\[\frac{dQ}{dt} = Input rate - Output rate \].
+
+
+Substituting \( V_0 = 100 \), \( a = 1 \), \( b = 1 \), and \( e = f = 3 \), the expressions obtained above, we obtain
+\[
+\frac{dQ}{dt} = 3 - \frac{3}{100} Q.
+\]
+The solution to this linear differential equation is  
+\[
+Q = ce^{-0.03t} + 100
+\]
+
+At \( t = 0 \), \( Q = a = 1 \). Substituting these values into (I), we find \( 1 = ce^0 + 100 \), or \( c = -99 \). Then (I) can be rewritten as  
+\[
+Q = -99e^{-0.03t} + 100 \]
+
+We require \( t \) when \( Q = 2 \). Substituting \( Q = 2 \), we obtain  
+\[
+2 = -99e^{-0.03t} + 100 \quad  \Rightarrow \quad e^{-0.03t} = \frac{98}{99}
+\]
+
+from which  
+\[
+t = -\frac{1}{0.03} \ln \frac{98}{99} = 0.338 \, min
+\]
+            &\begin{verbatim}from scipy.integrate import solve_ivp
+import numpy as np
+
+def salt_amount(t, y):
+    return [3 - (3 / 100) * y[0]]
+
+sol = solve_ivp(salt_amount, [0, 1], [1],
+                t_eval=np.linspace(0, 1, 1000))
+
+amount = sol.y[0]
+times = sol.t
+
+idx = np.argmin(np.abs(amount - 2))
+resultado = round(times[idx], 3)
+
+print(resultado)\end{verbatim}& 0.338                 \\ \hline
+% Linha 9
+    8              & An RL circuit has an emf of $5$ volts, a resistance of $50$ ohms, an inductance of $1$ henry, and no initial
+current. Find the current in the circuit when the time is equal to $2$ seconds.
+          & The ODE equation is given by \[
+L\frac{dI}{dt} + R I =E. 
+\]. We are given that  $E = 5$, $R = 50$, and $L = 1$; hence equation  becomes
+\[
+\frac{dI}{dt} + 50 I = 5.
+\]
+
+This equation is linear; its solution is
+\[
+I = c e^{-50t} + \frac{1}{10}.
+\]
+
+At $t = 0$, $I = 0$; thus,
+\[
+0 = c e^{-50(0)} + \frac{1}{10},
+\]
+or
+\[
+c = -\frac{1}{10}.
+\]
+
+The current at any time $t$ is then
+\[
+I(t) = -\frac{1}{10} e^{-50t} + \frac{1}{10}.
+\]. At $t=2$, we have \[I(2) = -\frac{1}{10} e^{-100} + \frac{1}{10} =0.1 A
+\]
+              &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def rl_circuit(t, y):
+    return [5 - 50 * y[0]]
+
+sol = solve_ivp(rl_circuit, [0, 2], [0], t_eval=[2])
+resultado = round(sol.y[0][0], 1)
+print(resultado)
+\end{verbatim}&  0.1                \\ \hline
+% Linha 10
+      9           & 
+A person places \$20,000 in a savings account which pays 5\% interest per annum, compounded continuously. Find the time required for the account to double in value, presuming no withdrawals and no additional deposits.
+                &
+
+Let \( N(t) \) denote the balance in the account at any time \( t \). Initially, \( N(0) = 20{,}000 \). The balance in the account grows by the accumulated interest payments, which are proportional to the amount of money in the account. The constant of proportionality is the interest rate. In this case, \( k = 0.05 \) and hence we have 
+
+\[\frac{dN}{dt} - 0.05N = 0\]
+
+This differential equation is both linear and separable and its solution is
+
+\[N(t) = ce^{0.05t}\]
+
+Using  \( t = 0 \), \( N(0) = 20{,}000 \), we
+
+\[
+20{,}000 = ce^{0.05(0)} = c
+\]
+
+With this value of \( c \), we futher have
+
+\[
+N(t) = 20{,}000e^{0.05t}
+\], which is the equation thats gives the dollar balance in the account at any time \( t \).
+
+\ We seek the time \( t \) at which \( N(t) = \$40{,}000 \). Substituting these values  and solving for \( t \), we obtain
+    \[
+    40{,}000 = 20{,}000e^{0.05t}
+    \]
+    \[
+    2 = e^{0.05t}
+    \]
+    \[
+    \ln |2| = 0.05t
+    \]
+    \[    t = \frac{1}{0.05} \ln |2| = 13.86\]years
+  
+
+
+ &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def account_growth(t, y):
+    return [0.05 * y[0]]
+
+sol = solve_ivp(account_growth, [0, 13.86], [20000], t_eval=[13.86])
+resultado = round(np.log(2) / 0.05, 2)
+print(resultado)
+\end{verbatim}&   13.86      \\ \hline
+% Linha 11
+    10             &  What constant interest rate is required if an initial deposit placed into an account that accrues interest compounded continuously is to double its value in six years?  & 
+
+The equation of the balance \( N(t) \) in the account at any time \( t \) is governed by 
+\[ \frac{dN}{dt} - kN = 0 \] which has as its solution
+\[ N(t) = ce^{kt}\]
+
+We are not given an amount for the initial deposit, so we denote it as \( N_0 \). At \( t = 0 \), \( N(0) = N_0 \), which when substituted in the equation above yields
+\[
+N_0 = ce^{k(0)} = c
+\]
+and we have
+\[
+N(t) = N_0 e^{kt}
+\]
+
+We seek the value of \( k \) for which \( N = 2N_0 \) when \( t = 6 \). Substituting these values  and solving for \( k \), we find
+\[
+2N_0 = N_0 e^{k(6)}
+\]
+\[
+e^{6k} = 2
+\]
+\[
+6k = \ln |2|
+\]
+\[
+k = \frac{1}{6} \ln |2| = 0.1155*100% =11.55%
+\]
+
+An interest rate of 11.55 percent is required.
+
+  &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def account_growth(t, y):
+    return [0.1155 * y[0]]
+
+N0 = 1.0
+
+sol = solve_ivp(account_growth, [0, 6], [N0], t_eval=[6])
+resultado = round(0.1155 * 100, 2)
+print(resultado)\end{verbatim} &   11.55              \\ \hline
+% Linha 12
+    11             &  
+A metal bar at a temperature of \( 100^\circ F\) is placed in a room at a constant temperature of \( 0^\circ F \). If after 20 minutes the temperature of the bar is \( 50^\circ F \), find  the time it will take the bar to reach a temperature of \( 25^\circ F\)        &
+
+
+We are given that \( T_m = 0 \); the medium here is the room which is being held at a constant temperature of \( 0^\circ F \). Thus we have
+\[
+\frac{dT}{dt} + kT = 0
+\]
+whose solution is
+\[T = ce^{-kt}\]
+Since \( T = 100 \) at \( t = 0 \) (the temperature of the bar is initially \( 100^\circ F \)), it follows  that \( 100 = ce^{-k(0)} \) or \( 100 = c \). Substituting this value , we obtain
+\[T = 100e^{-kt}\]
+At \( t = 20 \), we are given that \( T = 50 \); hence,
+\[50 = 100e^{-20k} \quad \] from which \[\quad k = -\frac{1}{20} \ln \frac{50}{100} = -\frac{1}{20}(-0.693) = 0.035
+\]
+Substituting this value in the equation above, we obtain the temperature of the bar at any time \( t \) as
+\[T = 100e^{-0.035t}\]
+
+ We require \( t \) when \( T = 25 \). Substituting \( T = 25 \) in the equation above, we have
+    \[
+    25 = 100e^{-0.035t} \quad  \Rightarrow \quad -0.035t = \ln \frac{1}{4}  \]  and  solving for $t$ we have $t = 39.6$  min.
+  
+    
+           &\begin{verbatim}from scipy.integrate import solve_ivp
+import numpy as np
+
+def bar_temperature(t, y):
+    return [-0.034657 * y[0]]
+
+sol = solve_ivp(bar_temperature, [0, 45], [100],
+                t_eval=np.linspace(0, 45, 1000))
+
+temperatures = sol.y[0]
+times = sol.t
+
+idx = np.argmin(np.abs(temperatures - 25))
+resultado = round(times[idx], 1)
+
+print(resultado)\end{verbatim}& 39.6                \\ \hline
+% Linha 13
+   12              &   Determine the interest rate required to triple an investment in ten years under continuous compounding.               &                
+
+ Let \( A(t) \) denote the investment at time \( t \).
+
+The ODE is given by
+\[
+\frac{dA}{dt} = kA
+\]
+and solving this equation using integrating factor we have
+\[
+N(t) = e^{kt}
+\]
+
+Since we are not given the initial condition, we assume that at \( t = 0 \),
+\[
+A(0) = A_0
+\]
+
+We want to find \( k \) (the interest rate) when we have \( 3A_0 \) and \( t = 10 \).
+
+Then
+\[
+3A_0 = A_0 e^{10k} \implies e^{10k} = 3 \implies k = \frac{\ln 3}{10} \approx 0.1099
+\]
+
+Thus the interest rate is given by
+\[
+k = \frac{\ln 3}{10} \approx 0.1099=10.99\%
+\]
+
+
+
+&\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def investment_growth(t, y):
+    return [0.1099 * y[0]]
+
+A0 = 1.0
+
+sol = solve_ivp(investment_growth, [0, 10], [A0], t_eval=[10])
+resultado = round(0.1099 * 100, 2)
+print(resultado)\end{verbatim} &  10.99             \\ \hline
+% Linha 14
+      13           & A certain headteacher places 5000 kuanzas in an account of Banc Sol of Angola established for a child at birth. Assuming no additional deposits or withdrawals have been made, how much will the child have upon reaching the age of 24 if the bank pays 5\% interest per annum compounded continually for the entire time period.       & 
+
+Let \( N(t) \) denote the balance in the account at time \( t \). We have
+\[
+N(0) = 5000
+\]
+and the interest rate is \( k = 0.05 \).
+
+The ODE is given by
+\[
+\frac{dN}{dt} = kN
+\]
+and solving this equation gives
+\[
+N(t) = C e^{kt}.
+\]
+
+Using the initial condition \( N(0) = 5000 \), we find \( C = 5000 \), so
+\[
+N(t) = 5000 e^{0.05t}.
+\]
+
+We want to find \( N(24) \) when \( t = 24 \).
+
+We have
+\[
+N(24) = 5000 e^{0.05 \times 24} = 5000 e^{1.2} \approx 16600.83 \] kuanzas
+
+
+ 
+
+
+
+
+
+
+             &\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def account_growth(t, y):
+    return [0.05 * y[0]]
+
+sol = solve_ivp(account_growth, [0, 24], [5000], t_eval=[24])
+resultado = round(sol.y[0][0], 2)
+print(resultado)\end{verbatim}&    16600.83              \\ \hline
+% Linha 15
+     14            & The population of the municipality of Mbave in Angola is known to grow at a rate proportional to the number of people presently living in the municipality. If after 10 years the population has trebled and if after 20 years the population is 150000, find the number of people initially living in the municipality.
+             & \
+
+
+Let \( P(t) \) denote the number of people at time \( t \).
+
+The equation we have is given by
+\[
+\frac{dP}{dt} = kP
+\]
+where \( k \) is constant. Solving this equation we have
+\[
+P(t) = C e^{kt}.
+\]
+
+At \( t = 10 \), we are given that the population has trebled, which implies that
+\[
+P(10) = 3P_0 = P_0 e^{10k}.
+\]
+Thus
+\[
+3 = e^{10k} \implies 10k = \ln 3 \implies k = \frac{\ln 3}{10} \approx 0.1099.
+\]
+
+Therefore
+\[
+P(t) = C e^{0.1099t}.
+\]
+
+We also have that when \( t = 20 \),
+\[
+P(20) = 150000 = C e^{0.1099 \times 20} = C e^{2.198}.
+\]
+
+Hence
+\[
+C = \frac{150000}{e^{2.198}} \approx \frac{150000}{9.011} \approx 16646.
+\]
+
+Therefore the number of people initially is approximately 16646 people.
+
+
+              & \begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def population_growth(t, y):
+    return [0.1099 * y[0]]
+
+P0 = 150000 / np.exp(2.198)
+
+sol = solve_ivp(population_growth, [0, 20], [P0], t_eval=[20])
+resultado = round(P0, 0)
+print(int(resultado))\end{verbatim}&    16646           \\ \hline
+% Linha 16
+      15         &    A radioactive material found at the  Lab of the Polytechnic Institute of the University Eduardo dos Santos is known to decay at a rate proportional to the amount present. If initially there are 100 milligrams of the material present and after two years, it is observed that 5\% of the original mass has decayed, find the time necessary for 10\% of the original mass to decay.              &   
+
+Let \( P(t) \) denote the amount of radioactive material present at time \( t \).
+
+The ODE is given by $\frac{dP}{dt} = -kP$ and solving this equation we have
+$P(t) = C e^{-kt}.$
+At \( t = 0 \), we have \( P(0) = 100 \), which implies that
+\[
+100 = C e^{0} \implies C = 100 \implies P(t) = 100 e^{-kt}.
+\]
+
+At \( t = 2 \), we are told that 5\% of the original mass has decayed, so 95\% remains:
+$P(2) = 100 \times 0.95 = 95.$
+
+Hence
+\[
+95 = 100 e^{-2k} \implies e^{-2k} = 0.95.
+\]
+
+Taking natural logarithms:
+\[
+-2k = \ln(0.95) \implies k = -\frac{\ln(0.95)}{2} \approx 0.02565.
+\]
+
+Thus $P(t) = 100 e^{-0.02565t}.$
+
+We want the time \( t \) when 10\% of the original mass has decayed, meaning 90\% remains:
+\[
+P(t) = 90.
+\]
+Hence
+\[
+90 = 100 e^{-0.02565t} \implies e^{-0.02565t} = 0.9.
+\]
+
+Taking natural logarithms:$
+-0.02565t = \ln(0.9)$  which implies 
+\[t = -\frac{\ln(0.9)}{0.02565} \approx \frac{0.10536}{0.02565} \approx 4.11  years.\]
+
+
+             &\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def radioactive_decay(t, y):
+    return [-0.02565 * y[0]]
+
+sol = solve_ivp(radioactive_decay, [0, 4.11], [100], t_eval=[4.11])
+resultado = round(-np.log(0.9) / 0.02565, 2)
+print(resultado)\end{verbatim}&   4.11            \\ \hline
+% Linha 17
+     16            & A depositor places \$10000 in a certificate of deposit at YETU Banc of Angola with an interest rate of \(7\frac{1}{2}\) percent per annum, compounded continuously. How much will be in the account at the end of eight years, assuming no additional deposits or withdrawals are done? &  
+
+
+Let \( A(t) \) denote the balance in the account at any time \( t \). We have \( A(0) = 10000 \) and the interest rate is \( k = 0.075 \).
+
+The ODE is given as
+\[
+\frac{dA}{dt} = kA
+\]
+and solving this equation gives
+\[
+A(t) = C e^{kt}.
+\]
+
+Using the initial condition \( A(0) = 10000 \), we find \( C = 10000 \), so
+\[
+A(t) = 10000 e^{kt}.
+\]
+
+We want \( A(8) \):
+\[
+A(8) = 10000 e^{0.075 \times 8} = 10000 e^{0.6}.
+\]
+
+Using the approximation \( e^{0.6} \approx 1.82212 \), we get
+\[
+A(8) \approx 10000 \times 1.82212 = 18221
+\]
+
+
+
+          &\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def account_growth(t, y):
+    return [0.075 * y[0]]
+
+sol = solve_ivp(account_growth, [0, 8], [10000], t_eval=[8])
+resultado = round(10000 * 1.82212, 0)
+print(int(resultado))\end{verbatim} &  18221              \\ \hline
+% Linha 18
+      17           &  A depositor places \$10,000 in a certificate of deposit at Standard Bank of Angola which pays 6\% interest per annum, compounded continuously. How much will be in the account at the end of seven years, assuming no additional deposits or withdrawals have been made?        &   
+
+
+
+
+Let \( A(t) \) denote the balance in the account at any time \( t \).
+
+We have \( A(0) = 10000 \) and the interest rate is \( k = 0.06 \).
+
+The ODE is given by
+\[
+\frac{dA}{dt} = kA
+\]
+and solving this equation gives
+\[
+A(t) = Ce^{kt}.
+\]
+
+Using the initial condition, \( A(0) = 10000 = Ce^{0} \implies C = 10000 \), so
+\[
+A(t) = 10000e^{0.06t}.
+\]
+
+To find the amount at \( t = 7 \) years, we have
+\[
+A(7) = 10000e^{0.06 \times 7} = 10000e^{0.42}.
+\]
+
+Using the approximation \( e^{0.42} \approx 1.52196 \), we get
+\[
+A(7) \approx 10000 \times 1.52196 = 15219
+\]
+
+
+
+         & \begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def account_growth(t, y):
+    return [0.06 * y[0]]
+
+sol = solve_ivp(account_growth, [0, 7], [10000], t_eval=[7])
+resultado = round(10000 * 1.52196, 0)
+print(int(resultado))\end{verbatim}&   15219             \\ \hline
+    % Linha 19   
+    18            &  A certain radioactive material is known to decay at a rate proportional to the amount present. If after one year it is observed that 10\% of the material has decayed, find the half-life of the material.
+                &  
+Let \( P(t) \) denote the amount of radioactive material at time \( t \). The ODE is given by
+\[
+\frac{dP}{dt} = -kP
+\]
+and solving it gives $P(t) = C e^{-kt}.$
+
+
+Assuming the initial condition \( P(0) = P_0 \), we have \( C = P_0 \). Hence
+$P(t) = P_0 e^{-kt}.$
+
+At \( t = 1 \), we are told that 10\% of the material has decayed, so 90\% remains:$P(1) = 0.90 P_0.$
+
+Thus $0.90 P_0 = P_0 e^{-k} \implies e^{-k} = 0.90.$
+
+Taking natural logarithms:
+\[
+-k = \ln(0.90) \implies k = -\ln(0.90) \approx 0.10536.
+\]
+
+Therefore, $P(t) = P_0 e^{-0.10536t}.$
+
+We want the half-life \( t_{1/2} \), the time when \( P(t) = \frac{1}{2}P_0 \):
+\[
+\frac{1}{2} P_0 = P_0 e^{-0.10536t} \implies \frac{1}{2} = e^{-0.10536t}.
+\]
+
+Taking natural logarithms:
+$
+\ln\left(\frac{1}{2}\right) = -0.10536t$ 
+\[\implies t = \frac{\ln(1/2)}{-0.10536} = \frac{-\ln 2}{-0.10536} = \frac{\ln 2}{0.10536}.
+\]
+Hence $t \approx \frac{0.693147}{0.10536} \approx 6.58$  years.
+
+
+            & \begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def radioactive_decay(t, y):
+    return [-0.10536 * y[0]]
+
+P0 = 1.0
+
+sol = solve_ivp(radioactive_decay, [0, 6.58], [P0], t_eval=[6.58])
+resultado = round(np.log(2) / 0.10536, 2)
+print(resultado)\end{verbatim}&   6.58               \\ \hline
+% Linha 20
+    19             & Determine the interest rate required to double an investment in eight years under continuous compounding.               & Let \( A(t) \) denote the investment at a time \( t \).
+
+The ODE is given by
+\[
+\frac{dA}{dt} = kA
+\]
+and solving this equation using integrating factor we have
+\[
+A(t) = C e^{kt}.
+\]
+
+Since we are not given the initial condition, we assume that at \( t = 0 \),
+\[
+A_0 = C e^{k \cdot 0} \Rightarrow C = A_0.
+\]
+Hence
+\[
+A(t) = A_0 e^{kt}.
+\]
+
+We want to find \( k = \text{interest rate when we have } 2A_0 \text{ and } t = 8. \)
+
+Therefore
+\[
+2A_0 = A_0 e^{8k} \implies 2 = e^{8k}
+\]
+\[
+\Rightarrow e^{8k} = 2 \implies 8k = \ln 2 \implies k = \frac{\ln 2}{8} \approx 0.0866.
+\]
+
+Thus the interest rate is given by
+\[
+k = \frac{\ln 2}{8} \approx 0.0866 \times 100 \approx 8.66\%.
+\]
+               &\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def investment_growth(t, y):
+    return [0.0866 * y[0]]
+
+A0 = 1.0
+
+sol = solve_ivp(investment_growth, [0, 8], [A0], t_eval=[8])
+resultado = round(0.0866 * 100, 2)
+print(resultado) \end{verbatim}&  8.66               \\ \hline
+% Linha 21
+    20             & A metal bar at an unknown temperature is placed in a room which is held at a constant temperature of 40◦F. If after 15 minutes the temperature of the metal bar  is 0◦ F and after 25 minutes the temperature of the metal bar is 12◦F, find the unknown initial temperature.               & Let \( T \) denote the temperature of the body. Then the time rate of change of the temperature of the body is \( dT/dt \), and Newton’s law of cooling can be formulated as  
+\[
+dT/dt = -k(T - T_m), \Rightarrow \frac{dT}{dt} + kT = kT_m
+\]
+Let  $T_m = 40$ (constant temperature of the room),  
+\[
+\frac{dT}{dt} + kT = 40k
+\]
+
+Solving, we obtain  
+
+$T = ce^{-kt} + 40$
+
+
+At \( t = 15 \), we are given that \( T = 0 \). Hence, we have,  
+\[
+0 = ce^{-15k} + 40 \quad \Rightarrow \quad ce^{-15k} = -40
+\]
+
+At \( t = 25 \), we are given that \( T = 12 \). Hence, we have,  
+\[
+12 = ce^{-25k} + 40 \quad \Rightarrow \quad ce^{-25k} = -28 
+\]
+
+Solving  for \( k \) and \( c \) using the above two equations, we find  
+\[
+k = \frac{1}{10} \ln\frac{10}{7}  =0.03567 \quad\] and   \[\quad c = -68.2988
+\]
+Substituting these values of  \( k \) and \( c \) , we have 
+$T = -68.2988e^{-0.03567t} + 40$
+
+Since we require \( T \) at the initial time \( t = 0 \), it follows  that
+$T_0 = -68.2988e^{(-0.03567)(0)} + 40 = -68.2988 + 40 = -28.2988^\circ \, F$
+
+               & \begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def newton_cooling(t, y):
+    return [-0.03567 * (y[0] - 40)]
+
+T0 = -68.2988 + 40
+
+sol = solve_ivp(newton_cooling, [0, 25], [T0], t_eval=[25])
+resultado = round(T0, 4)
+print(resultado)\end{verbatim}&  -28.2988               \\ \hline
+
+21            & How long will it take a bank deposit to triple in value if interest is compounded continuously at a constant rate of \(5.2\%\) per annum?
+
+
+              & Let \(A(t)\) denote the amount of money in the bank at time \(t\).
+The ODE is given by
+\[
+\frac{dA}{dt}=kA,
+\]
+where \(k=0.052\) is the constant interest rate.
+
+Solving this differential equation using the integrating factor (or separation of variables), we obtain
+\[
+A(t)=Ce^{kt}.
+\]
+
+Since the initial amount is not specified, let
+\[
+A(0)=A_0.
+\]
+
+Thus,
+\[
+A_0=Ce^{k\cdot0}=C,
+\]
+which gives
+\[
+A(t)=A_0e^{kt}.
+\]
+
+We are asked to determine the time \(t\) when the investment triples, that is,
+\[
+A(t)=3A_0.
+\]
+
+Substituting into the solution,
+\[
+3A_0=A_0e^{0.052t},
+\]
+which implies
+\[
+3=e^{0.052t}.
+\]
+
+Taking the natural logarithm of both sides,
+\[
+0.052t=\ln 3,
+\]
+so $
+t=\frac{\ln 3}{0.052}\approx\frac{1.0986}{0.052}\approx21.13$.
+
+Therefore, the required time is $t=\frac{\ln 3}{0.052} \approx 21.13$  years
+
+                &\begin{verbatim}from scipy.integrate import solve_ivp
+import numpy as np
+
+def bank_deposit(t, y):
+    return [0.052 * y[0]]
+
+sol = solve_ivp(bank_deposit, [0, 25], [1],
+                t_eval=np.linspace(0, 25, 10001))
+
+amount = sol.y[0]
+times = sol.t
+
+idx = np.argmin(np.abs(amount - 3))
+resultado = round(times[idx], 2)
+
+print(resultado)\end{verbatim}& 21.13   \\ \hline    
+22            & How long will it take a bank deposit to double in value if interest is compounded continuously at a constant rate of \(8.75\%\) per annum?
+
+
+              & Let \(A(t)\) denote the amount of money in the bank at time \(t\).
+
+The ODE is given by
+\[
+\frac{dA}{dt}=kA,
+\]
+where \(k=0.0875\) is the constant interest rate.
+
+Solving this differential equation using the integrating factor (or separation of variables), we obtain
+\[
+A(t)=Ce^{kt}.
+\]
+
+Since the initial amount is not specified, let
+\[
+A(0)=A_0.
+\]
+
+Thus,
+\[
+A_0=Ce^{k\cdot0}=C,
+\]
+which gives
+\[
+A(t)=A_0e^{kt}.
+\]
+
+We are asked to determine the time \(t\) when the investment doubles, that is, $A(t)=2A_0.$
+Substituting into the solution, $ 2A_0=A_0e^{0.0875t},$
+
+which implies  $2=e^{0.0875t}.$
+Taking the natural logarithm of both sides, $0.0875t=\ln 2,$ so
+\[
+t=\frac{\ln 2}{0.0875}\approx\frac{0.6931}{0.0875}\approx7.92.
+\]
+
+Therefore, the required time is
+\[
+t=\frac{\ln 2}{0.0875}\approx7.92  years
+\]   &\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def account_growth(t, y):
+    return [0.0875 * y[0]]
+
+A0 = 1.0
+
+sol = solve_ivp(account_growth, [0, 7.92], [A0], t_eval=[7.92])
+resultado = round(np.log(2) / 0.0875, 2)
+print(resultado)\end{verbatim}& 7.92   \\ \hline   
+
+23            & A depositor currently has \(\$6000\) and plans to invest it in an account that accrues interest continuously. What interest rate must he find if the deposit needs to reach \(\$10000\) in four years?
+
+
+              & Let \(A(t)\) denote the amount of money in the account at time \(t\).
+
+The ODE is given by
+\[
+\frac{dA}{dt}=kA,
+\]
+where \(k\) is the constant interest rate.
+
+Solving this differential equation using the integrating factor (or separation of variables), we obtain
+\[
+A(t)=Ce^{kt}.
+\]
+
+Since the initial amount is
+\[
+A(0)=6000,
+\]
+we have
+\[
+6000=Ce^{k\cdot0}=C,
+\]
+so that
+\[
+A(t)=6000e^{kt}.
+\]
+
+We are asked to determine the interest rate \(k\) such that
+\[
+A(4)=10000.
+\]
+
+Substituting into the solution,$
+10000=6000e^{4k},$
+which implies $e^{4k}=\frac{10000}{6000}.$
+
+Taking the natural logarithm of both sides, $4k=\ln\left(\frac{10000}{6000}\right),$
+so
+\[
+k=\frac{1}{4}\ln\left(\frac{10000}{6000}\right)
+   \approx\frac{0.5108}{4}
+   \approx0.1277.
+\]
+
+Therefore, the required interest rate is 
+$k=\frac{1}{4}\ln\left(\frac{10000}{6000}\right)\approx0.1277$
+
+Expressed as a percentage,
+\[
+k\approx12.77\%
+\] & \begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def account_growth(t, y):
+    return [0.1277 * y[0]]
+
+A0 = 6000
+
+sol = solve_ivp(account_growth, [0, 4], [A0], t_eval=[4])
+resultado = round(0.1277 * 100, 2)
+print(resultado) \end{verbatim}& 12.77   \\ \hline 
+24            & A depositor currently has \(\$8000\) and plans to invest it in an account that accrues interest continuously at a constant rate of \(6.25\%\) per annum. How long will it take for the account to grow to \(\$13500\)?
+              & Let \(A(t)\) denote the amount of money in the account at time \(t\).
+
+The ODE is given by
+\[
+\frac{dA}{dt}=kA,
+\]
+where \(k=0.0625\) is the constant interest rate.
+
+Solving this differential equation using the integrating factor (or separation of variables), we obtain
+$
+A(t)=Ce^{kt}.$
+
+Since the initial amount is$A(0)=8000,$
+
+we have$8000=Ce^{k\cdot0}=C,$
+so that $A(t)=8000e^{kt}.$
+We are asked to determine the time \(t\) such that $A(t)=13500.$
+
+Substituting into the solution,$
+13500=8000e^{0.0625t},$ which implies
+
+$e^{0.0625t}=\frac{13500}{8000}.$
+
+Taking the natural logarithm of both sides,
+\[
+0.0625t=\ln\left(\frac{13500}{8000}\right),
+\]
+
+\[
+t=\frac{\ln\left(\frac{13500}{8000}\right)}{0.0625}
+  \approx\frac{0.5232}{0.0625}
+  \approx8.37.
+\]
+
+Therefore, the required time is
+$ t=\frac{\ln\left(\frac{13500}{8000}\right)}{0.0625}\approx8.37$ years
+& \begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def account_growth(t, y):
+    return [0.0625 * y[0]]
+
+sol = solve_ivp(account_growth, [0, 8.37], [8000], t_eval=[8.37])
+resultado = round(np.log(13500 / 8000) / 0.0625, 2)
+print(resultado) \end{verbatim}& 8.37   \\ \hline
+
+25            &A mold grows at a rate proportional to its present size. Initially, there is \(2\) g of this mold, and two days later there is \(3\) g. Find the amount of mold present after one day.
+
+
+              & Let \(P(t)\) denote the amount of mold at time \(t\).
+
+The ODE is given by
+\[
+\frac{dP}{dt}=kP,
+\]
+where \(k\) is the constant growth rate.
+
+Solving this differential equation using the integrating factor (or separation of variables), we obtain
+\[
+P(t)=Ce^{kt}.
+\]
+
+Since the initial amount is
+\[
+P(0)=2,
+\]
+we have
+\[
+2=Ce^{k\cdot0}=C,
+\]
+so that
+\[
+P(t)=2e^{kt}.
+\]
+
+Since after two days the amount is \(3\) g,
+\[
+P(2)=3,
+\]
+we obtain $3=2e^{2k},$
+which implies $e^{2k}=\frac{3}{2}.$
+Taking the natural logarithm of both sides,$2k=\ln\left(\frac{3}{2}\right),$
+so
+\[
+k=\frac{1}{2}\ln\left(\frac{3}{2}\right)\approx0.2027.
+\]
+
+Now, we determine the amount of mold after one day:
+\[
+P(1)=2e^{k}
+     =2e^{0.2027}
+     \approx2(1.2247)
+     \approx2.45.
+\]
+
+Equivalently,$P(1)
+=2e^{\frac{1}{2}\ln\left(\frac{3}{2}\right)}
+=2\sqrt{\frac{3}{2}}
+\approx2.45.$
+
+Therefore, the amount of mold after one day is 2.45g.
+ & \begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def mold_growth(t, y):
+    return [0.2027 * y[0]]
+
+sol = solve_ivp(mold_growth, [0, 1], [2], t_eval=[1])
+resultado = round(sol.y[0][0], 2)
+print(resultado) \end{verbatim}& 2.45   \\ \hline 
+26            &The population of a certain country grows at a rate proportional to the number of people in the country at any given time. At present, the country has \(8\) billion inhabitants. Ten years ago, it had \(7\) billion inhabitants. Assuming that this trend continues, find the approximate number of people who will inhabit the country ten years from now.
+
+
+              & Let \(P(t)\) denote the population of the country at time \(t\), where \(t\) is measured in years and \(t=0\) represents the present.
+
+The ODE is given by
+\[
+\frac{dP}{dt}=kP,
+\]
+where \(k\) is the constant growth rate.
+
+Solving this differential equation using the integrating factor (or separation of variables), we obtain
+$P(t)=Ce^{kt}.$
+
+Since the present population is $P(0)=8,$we have $8=Ce^{k\cdot0}=C,$
+so that $
+P(t)=8e^{kt}.$
+
+Ten years ago, the population was \(7\) billion, that is,
+$P(-10)=7$.
+Substituting into the solution, $7=8e^{-10k},$ which implies $
+e^{-10k}=\frac{7}{8}.$
+
+
+Taking the natural logarithm of both sides,$
+-10k=\ln\left(\frac{7}{8}\right)$,so
+\[
+k=-\frac{1}{10}\ln\left(\frac{7}{8}\right)
+=\frac{1}{10}\ln\left(\frac{8}{7}\right)
+\approx0.01335.
+\]
+Now, we determine the population after the next ten years:
+$$P(10)=8e^{10k}$$. Since $
+e^{10k}=\frac{8}{7}$,  we obtain
+$P(10)=8\left(\frac{8}{7}\right)
+=\frac{64}{7}
+\approx9140000000$. 
+ &\begin{verbatim}from scipy.integrate import solve_ivp
+import numpy as np
+
+k = (1 / 10) * np.log(8 / 7)
+
+def population_growth(t, y):
+    return [k * y[0]]
+
+sol = solve_ivp(population_growth, [0, 10], [8], t_eval=[10])
+resultado = round(sol.y[0][0] * 1e9)
+print(resultado)\end{verbatim}& 9140000000  \\ \hline 
+ 27            &A Bacteria grow in a nutrient solution at a rate proportional to the amount present. Initially, there are 250 strands of the bacteria in the solution which grows to 800 strands after seven hours. Find the time needed for the bacteria to grow to 1600 strands.
+
+
+              & Let \(N(t)\) denote the number of bacteria strands at time \(t\), where \(t\) is measured in hours and \(t=0\) represents the initial time.The ODE is given by
+
+$
+\frac{dN}{dt}=kN,$ where $k$ is the constant growth rate. Solving this differential equation using the integrating factor (or separation of variables), we obtain $ N(t)=Ce^{kt}$. Since the initial population is $N(0)=250$, we have $250=Ce^{k\cdot 0}=C,$ so that $N(t)=250e^{kt}$.
+After seven hours, the population is $800$ strands, that is,
+$N(7)=800$.
+Substituting into the solution, $
+800=250e^{7k},$ which implies $ e^{7k}=\frac{800}{250}=3.2$.
+
+Taking the natural logarithm of both sides, $7k=\ln(3.2),$
+so $k=\frac{1}{7}\ln(3.2)\approx 0.16617$.
+
+Now, we determine the time required for the population to reach $1600$ strands: $N(t)=1600$.
+Substituting into the solution, $1600=250e^{kt}$, which implies
+$e^{kt}=\frac{1600}{250}=6.4$.
+Taking the natural logarithm of both sides, $kt=\ln(6.4)$, so
+$t=\frac{\ln(6.4)}{k}$.
+Substituting the value of $k$, $t=\frac{\ln(6.4)}{\ln(3.2)/7}
+=\frac{7\ln(6.4)}{\ln(3.2)}
+\approx 11.17$.
+Therefore, the time needed for the bacteria population to grow to $1600$ strands is 11.17 hours.
+
+
+ &\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def bacteria_growth(t, y):
+    return [0.16617 * y[0]]
+
+sol = solve_ivp(bacteria_growth, [0, 11.17], [250], t_eval=[11.17])
+resultado = round(np.log(6.4) / 0.16617, 2)
+print(resultado)\end{verbatim} &11.17  \\ \hline 
+  28           & An RC circuit has an emf of $5$ volts, a resistance of $10$ ohms, a capacitance of $10^{-2}$ farad, and initially a charge of $5$ coulombs on the capacitor. Find the steady-state current.
+
+
+              & For an RC circuit, the governing differential equation is
+
+\[
+R\frac{dQ}{dt}+\frac{1}{C}Q=E,
+\]
+
+where $(Q(t)$ is the charge on the capacitor at time $t$.
+
+We are given that
+
+$
+E=5V,\qquad
+R=10\ \Omega,\qquad
+C=10^{-2}F,\qquad
+Q(0)= 5C.
+$
+
+Hence, the differential equation becomes $10\frac{dQ}{dt}+100Q=5$.
+
+Dividing both sides by $10$, we obtain  $\frac{dQ}{dt}+10Q=\frac{1}{2}$.
+This equation is linear; its solution is $Q(t)=ce^{-10t}+\frac{1}{20}$.
+Applying the initial condition $Q(0)=5$, $5=c+\frac{1}{20}$, which gives
+$c=5-\frac{1}{20}
+=\frac{99}{20}$.
+Therefore, the charge on the capacitor at any time \(t\) is
+$Q(t)=\frac{99}{20}e^{-10t}+\frac{1}{20}$.
+The current is the rate of change of the charge:
+$I(t)=\frac{dQ}{dt}$. Differentiating $Q(t)$,
+
+$I(t)
+=-10\left(\frac{99}{20}\right)e^{-10t}
+=-\frac{99}{2}e^{-10t}$.
+The steady-state current is
+
+\[
+\lim_{t\to\infty}I(t).
+\]
+
+Since
+
+\[
+\lim_{t\to\infty}e^{-10t}=0,
+\]
+
+it follows that
+
+\[
+\lim_{t\to\infty}I(t)
+=\lim_{t\to\infty}\left(-\frac{99}{2}e^{-10t}\right)
+=0.
+\]
+Therefore, the steady-state current is 0 A.
+
+
+ &\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def rc_circuit(t, y):
+    return [(5 - 100 * y[0]) / 10]
+
+sol = solve_ivp(rc_circuit, [0, 10], [5], t_eval=[10])
+current_steady_state = 0.0
+resultado = round(current_steady_state, 0)
+print(int(resultado))\end{verbatim}& 0  \\ \hline 
+
+ 29           & An RC circuit has an emf of $100$ volts, a resistance of $5$ ohms, a capacitance of $0.02$ farad, and an initial charge of $5$ coulombs on the capacitor. Assuming that the charge satisfies the RC circuit differential equation, find the charge on the capacitor after $2$ minutes.
+
+
+              & For an RC circuit, the governing differential equation is
+
+$$
+R\frac{dQ}{dt}+\frac{1}{C}Q=E,
+$$
+
+where \(Q(t)\) is the charge on the capacitor at time \(t\).
+
+We are given that
+
+$$
+E=100\,V,\qquad
+R=5\,\Omega,\qquad
+C=0.02\,F,\qquad
+Q(0)=5\,C.
+$$
+
+Hence, the differential equation becomes
+
+$
+5\frac{dQ}{dt}+\frac{1}{0.02}Q=100,
+$
+
+or
+
+$
+5\frac{dQ}{dt}+50Q=100.
+$
+
+Dividing both sides by \(5\), we obtain
+
+$
+\frac{dQ}{dt}+10Q=20.
+$
+
+This equation is linear, and its solution is
+
+$
+Q(t)=ce^{-10t}+2.
+$
+
+Applying the initial condition \(Q(0)=5\),
+
+$
+5=c+2,
+$
+
+which gives
+
+$
+c=3.
+$
+
+Therefore, the charge on the capacitor at any time \(t\) is
+
+$
+Q(t)=3e^{-10t}+2.
+$
+
+Since the problem asks for the charge after \(2\) minutes, we convert the time to seconds:
+
+$$
+2\text{ minutes}=120\text{ seconds}.
+$$
+
+Thus,
+
+$$
+Q(120)=3e^{-10(120)}+2
+=3e^{-1200}+2.
+$$
+
+Since
+
+$
+e^{-1200}\approx 0,
+$
+
+we obtain $
+Q(120)\approx 2.
+$
+
+Therefore, the charge on the capacitor after \(2\) minutes is approximately 2 coulombs.
+
+ &\begin{verbatim}from scipy.integrate import solve_ivp
+import numpy as np
+
+def rc_circuit(t, y):
+    return [20 - 10 * y[0]]
+
+sol = solve_ivp(rc_circuit, [0, 120], [5], t_eval=[120])
+resultado = round(sol.y[0][0], 2)
+print(resultado)\end{verbatim}& 2  \\ \hline 
+ 30          & 
+A 50-gal tank initially contains 10 gal of fresh water. At t = 0, a brine solution containing 1 Ib of salt per gallon is poured into the tank at the rate of 4 gal/min, while the well-stirred mixture leaves the tank at the rate of 2 gal/min. Find the amount of time required for overflow to occur.
+                &Let \(V(t)\) denote the volume of liquid (in gallons) in the tank at time \(t\), where \(t\) is measured in minutes.
+
+Initially,
+
+\[
+V(0)=10  gal
+\]
+
+Since the brine enters the tank at a rate of \(4\) gal/min and leaves at a rate of \(2\) gal/min, the volume changes according to
+
+\[
+\frac{dV}{dt}=4-2=2.
+\]
+
+Integrating both sides, we obtain
+\[
+V(t)=2t + C \] and since $V(0)= 10 =C$, we have
+\[
+V(t)=10+2t.
+\]
+
+Overflow occurs when the volume reaches the tank's capacity of \(50\) gallons. Thus,
+
+\[
+10+2t=50.
+\]
+
+Solving for \(t\),
+
+\[
+2t=40,
+\]
+
+\[
+t=20.
+\]
+
+Therefore, the amount of time required for the tank to overflow is  20 minutes.
+
+
+
+
+
+
+ &\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def tank_volume(t, y):
+    return [2]
+
+sol = solve_ivp(tank_volume, [0, 20], [10], t_eval=[20])
+resultado = round(sol.t[-1], 0)
+print(int(resultado))\end{verbatim} &  20 \\ \hline
+% Linha 11
+    31             &  A body weighing 64 Ib is dropped from a height of 100 ft with an initial velocity of 10 ft/sec. Assume
+that the air resistance is proportional to the velocity of the body. If the limiting velocity is known to be
+128 ft/sec, find  the velocity of the body after two seconds. & Let \(v(t)\) denote the velocity of the body (in ft/s) at time \(t\), where \(t\) is measured in seconds. Taking the downward direction as positive, Newton's second law gives
+
+$
+m\frac{dv}{dt}=mg-kv,
+$
+
+where \(m\) is the mass of the body, \(g=32\) ft/s\(^2\), and \(k\) is the constant of proportionality for the air resistance.
+
+Since the body weighs \(64\) lb,
+
+$
+m=\frac{64}{32}=2 slugs.$
+
+
+Thus,
+
+$2\frac{dv}{dt}=64-kv.$
+
+The limiting (terminal) velocity is \(128\) ft/s. At terminal velocity,
+$\frac{dv}{dt}=0,$ so
+$
+64-k(128)=0,$
+
+which gives $
+k=\frac{64}{128}=\frac12.$
+
+Hence, the differential equation becomes
+$2\frac{dv}{dt}=64-\frac12v,$
+
+or rather  $\frac{dv}{dt}+\frac14v=32.$
+
+This is a first-order linear differential equation and solving the equation gives the  general solution $v(t)=Ce^{-t/4}+128.$
+The body is dropped with an initial downward velocity of \(10\) ft/s, so
+$v(0)=10.$
+Substituting into the general solution,
+$10=C+128,$
+which gives
+$
+C=-118.$
+Therefore, the velocity of the body at any time \(t\) is
+$v(t)=128-118e^{-t/4}ft/s$
+
+To find the velocity after \(2\) seconds, substitute \(t=2\):
+$v(2)=128-118e^{-1/2}.$
+Using \(e^{-1/2}\approx0.60653\),
+$v(2)\approx128-118(0.60653)
+      \approx56.43 ft/s.$
+
+  &\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+def v_model(t, v):
+    return [32 - 0.25 * v[0]]
+
+sol = solve_ivp(v_model, [0, 2], [10], t_eval=[2])
+resultado = round(sol.y[0][0], 2)
+print(resultado)
+\end{verbatim}&      56.43            \\ \hline
+% Linha 12
+
+
+   32              &   A body of mass 5 slugs is dropped from a height of 100 ft with zero velocity. Assuming no air resist- ance, find the time required to reach the ground.              &   Let \(y(t)\) denote the distance fallen by the body (in feet) at time \(t\), where \(t\) is measured in seconds. Since there is no air resistance, the only force acting on the body is gravity.
+
+By Newton's second law,  $m\frac{d^2y}{dt^2}=mg.$
+Since the mass is \(m=5\) slugs and \(g=32\) ft/s\(^2\),
+
+$5\frac{d^2y}{dt^2}=5 . 32,$
+
+or, 
+
+$\frac{d^2y}{dt^2}=32.$
+
+Integrating once,
+
+\[
+\frac{dy}{dt}=32t+C_1.
+\]
+
+Since the body is dropped from rest,
+
+$\frac{dy}{dt}(0)=0,$  which gives
+
+\[
+C_1=0.
+\]
+
+Hence,
+$\frac{dy}{dt}=32t.$
+Integrating again,
+
+$y(t)=16t^2+C_2.$
+
+Since the body starts falling from the release point,
+$y(0)=0,$  we obtain
+$C_2=0.$
+
+Therefore, the distance fallen after \(t\) seconds is
+$y(t)=16t^2.$
+
+The body reaches the ground after falling \(100\) ft. Thus,
+$16t^2=100.$
+Solving for \(t\), $
+t^2=\frac{100}{16}=\frac{25}{4},$
+
+$t=\frac{5}{2}.$
+
+Since time is positive, $ t=\frac{5}{2}=2.5 seconds $
+         
+
+ 
+
+
+
+&\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def y_model(t, y):
+    return [y[1], 32]
+
+def hit_ground(t, y):
+    return y[0] - 100
+hit_ground.terminal = True
+
+sol = solve_ivp(y_model, [0, 10], [0, 0], events=hit_ground)
+resultado = round(sol.t_events[0][0], 2)
+print(resultado)
+\end{verbatim}&   2.5         \\ \hline
+% Linha 14
+      33           & Five mice in a stable population of 500 are intentionally infected with a contagious disease to test a theory of epidemic spread. The theory states that the rate of change of the infected population is proportional to the product of the number of infected mice and the number of disease free mice. If the proportionality constant is k=2, determine how long it will take for half of the population to become infected.   & Let \(I(t)\) denote the number of infected mice at time \(t\). Since the total population remains constant at \(500\), the number of disease-free mice is
+
+$
+500-I(t).$
+
+According to the given theory, the rate of change of the infected population is proportional to the product of the number of infected mice and the number of disease-free mice. Since the proportionality constant is \(k=2\),
+$\frac{dI}{dt}=2I(500-I).$
+Separating the variables,
+$\frac{dI}{I(500-I)}=2\,dt.$
+Using partial fractions,
+$
+\frac{1}{I(500-I)}
+=\frac{1}{500}\left(\frac{1}{I}+\frac{1}{500-I}\right),$
+
+we obtain
+$
+\frac{1}{500}\int\left(\frac{1}{I}+\frac{1}{500-I}\right)\,dI
+=\int2\,dt.$
+
+Integrating both sides,
+
+$\frac{1}{500}\left(\ln|I|-\ln|500-I|\right)
+=2t+C,$
+
+or seja
+
+$
+\ln\left(\frac{I}{500-I}\right)=1000t+C_1,$
+
+
+where \(C_1=500C\).
+
+Exponentiating both sides,
+
+$\frac{I}{500-I}=Ae^{1000t},$
+where \(A=e^{C_1}\).
+
+Solving for \(I(t)\),
+
+$
+I(t)=\frac{500Ae^{1000t}}{1+Ae^{1000t}}.$
+Initially, five mice are infected, so
+
+$
+I(0)=5.$
+
+Substituting this initial condition,
+$5=\frac{500A}{1+A}, $ which gives $A=\frac{1}{99}.$
+Hence,
+$I(t)=\frac{500e^{1000t}}{99+e^{1000t}}.$
+To determine the time at which half the population is infected, set
+$I(t)=250.$
+Then, $250=\frac{500e^{1000t}}{99+e^{1000t}}.$
+
+Multiplying both sides by \(99+e^{1000t}\),
+
+$250(99+e^{1000t})=500e^{1000t},$
+which simplifies to
+$99=e^{1000t}.$
+Taking the natural logarithm of both sides,
+$1000t=\ln(99),$
+and therefore, $t=\frac{\ln(99)}{1000}.$
+Since 
+$\ln(99)\approx4.59512,$
+
+the required time is $t=\frac{\ln(99)}{1000}\approx0.00460$
+
+             &\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def I_model(t, I):
+    return [2 * I[0] * (500 - I[0])]
+
+def half_infected(t, I):
+    return I[0] - 250
+half_infected.terminal = True
+
+sol = solve_ivp(I_model, [0, 1], [5], events=half_infected)
+resultado = round(sol.t_events[0][0], 5)
+print(resultado)
+\end{verbatim}&  0.0046                \\ \hline
+% Linha 15
+     34            & A certain radioactive substance decays at a rate proportional to the amount of the substance present at any time. Initially, the sample has a mass of 50 milligrams. After 2 hours, the sample has lost 10\% of its original mass. Assuming the decay follows this law, determine the decay constant.
+             & Let \(A(t)\) denote the amount of the radioactive substance (in milligrams) at time \(t\), where \(t\) is measured in hours.
+
+Since the substance decays at a rate proportional to the amount present, the governing differential equation is
+
+\[
+\frac{dA}{dt}=-kA,
+\]  where \(k>0\) is the decay constant.
+
+Separating the variables,
+$\frac{dA}{A}=-k\,dt.$
+Integrating both sides,
+
+\[
+\int\frac{1}{A}\,dA=-k\int dt,
+\]
+
+gives $\ln|A|=-kt+C.$
+Exponentiating both sides,
+$A=Ce^{-kt}.$
+Using the initial condition \(A(0)=50\),
+$50=Ce^{0}$, or rather
+ $C=50.$
+Therefore, the amount of radioactive substance at time \(t\) is
+$A(t)=50e^{-kt}.$
+After \(2\) hours, the sample has lost \(10\%\) of its original mass. Hence, the remaining mass is $A(2)=0.90(50)=45mg.$
+Substituting this value into the solution, we obtain
+$45=50e^{-2k},$
+or seja
+$e^{-2k}=0.9.$
+Taking the natural logarithm of both sides,
+$-2k=\ln(0.9),$
+and therefore,
+$k=-\frac{1}{2}\ln(0.9).$
+
+Using the identity
+$-\ln(0.9)=\ln\left(\frac{10}{9}\right),$
+
+we obtain  $k=\frac{\ln(10/9)}{2}\approx -0.05268 $
+Thus, the proportionality constant (decay constant) is -0.053
+
+
+
+               &\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+k = np.log(0.9) / 2
+
+def radioactive_decay(t, A):
+    return [k * A[0]]
+
+sol = solve_ivp(radioactive_decay, [0, 2], [50], t_eval=[2])
+resultado = round(k, 5)
+print(resultado)
+\end{verbatim}&   -0.053           \\ \hline
+% Linha 16
+      35         &    A 50-gal tank initially contains 10 gal of fresh water. At t = 0, a brine solution containing 1 Ib of salt per gallon is poured into the tank at the rate of 4 gal/min, while the well-stirred mixture leaves the tank at the rate of 2 gal/min. Find the amount of salt in the tank at the moment of overflow.             &  Let $S(t)$ denote the amount of salt (lb) in the tank at time $t$ .Initially, the tank contains $10$ gal of fresh water. Since the brine enters at a rate of $4$ gal/min and leaves at a rate of $2$ gal/min, the volume of liquid in the tank is $
+V(t)=10+(4-2)t=10+2t.
+$
+
+The tank begins to overflow when its volume reaches $50$ gal. Hence, $10+2t=50,$
+
+which gives  $t=20  min.$
+
+Thus, the differential equation is valid for $0\le t\le20$.
+
+Form the differential equation
+
+The rate at which salt enters the tank is
+
+$
+(1\text{ lb/gal})(4\text{ gal/min})=4\text{ lb/min}.
+$
+
+The concentration of salt in the tank at time $t$ is
+
+$
+\frac{S(t)}{V(t)}
+=\frac{S(t)}{10+2t}.
+$
+
+Therefore, the rate at which salt leaves the tank is
+
+$
+2\cdot\frac{S(t)}{10+2t}
+=\frac{S(t)}{t+5}.
+$
+
+Hence, the governing differential equation is $
+\frac{dS}{dt}=4-\frac{S}{t+5},
+$
+
+with the initial condition $S(0)=0.$
+
+Solve the differential equation
+
+Rewriting the equation in standard linear form we have
+
+$
+\frac{dS}{dt}+\frac{1}{t+5}S=4.
+$
+
+The integrating factor is $
+\mu(t)=e^{\int\frac{1}{t+5}\,dt}
+=t+5.
+$
+
+Multiplying the differential equation by the integrating factor, $
+(t+5)\frac{dS}{dt}+S=4(t+5),
+$
+
+which can be written as $\frac{d}{dt}\left[(t+5)S\right]=4(t+5).$
+
+Integrating both sides, $
+(t+5)S
+=2(t+5)^2+C.
+$
+
+Therefore,$S(t)=2(t+5)+\frac{C}{t+5}.$
+
+Using the initial condition $S(0)=0$, $
+0=10+\frac{C}{5},
+$
+
+which implies $
+C=-50.
+$Thus, the amount of salt in the tank at time $t$ is $
+S(t)=2(t+5)-\frac{50}{t+5}.
+$
+
+Amount of salt at the moment of overflow
+
+Since the tank overflows at $t=20$ min, $
+S(20)
+=2(25)-\frac{50}{25}
+=50-2
+=48.
+$
+
+Therefore, the amount of salt in the tank at the moment of overflow is 48 lb.
+
+
+
+
+
+
+
+
+
+             &\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+def S_model(t, S):
+    return [4 - S[0] / (t + 5)]
+
+sol = solve_ivp(S_model, [0, 20], [0], t_eval=[20])
+resultado = round(sol.y[0][0], 0)
+print(resultado)
+\end{verbatim}& 48              \\ \hline
+% Linha 17
+     36            & A population of bacteria grows in a culture at a rate proportional to the amount present. Initially, 300 bacteria are present in the culture, and after two hours, the population has increased by 20 percent. Find the time required for the bacteria to double their initial population. & Let \(P(t)\) denote the number of bacteria at time \(t\) (hours).
+
+Since the bacteria grow at a rate proportional to the amount present,
+
+$$
+\frac{dP}{dt}=kP.
+$$
+
+Separating variables and integrating,
+
+$$
+\frac{dP}{P}=k\,dt
+\quad\Longrightarrow\quad
+P(t)=Ce^{kt}.
+$$
+
+Using \(P(0)=300\),
+
+$$
+P(t)=300e^{kt}.
+$$
+
+After two hours, the population has increased by \(20\%\), so
+
+$$
+P(2)=300(1.20)=360.
+$$
+
+Thus,
+
+$$
+360=300e^{2k}
+\quad\Longrightarrow\quad
+k=\frac{\ln(1.2)}{2}.
+$$
+
+The bacteria double their initial population when \(P(t)=600\). Hence,
+
+$$
+600=300e^{kt}
+\quad\Longrightarrow\quad
+2=e^{kt}.
+$$
+
+Taking the natural logarithm,
+
+$$
+t=\frac{\ln 2}{k}
+=\frac{2\ln 2}{\ln(1.2)}
+\approx7.60\text{ hours}.
+$$
+
+Therefore, the bacteria require
+
+$$
+\frac{2\ln 2}{\ln(1.2)}\approx7.60 hours
+$$
+
+to double their initial population.
+
+
+
+
+          &\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+k = 0.09116077839649533  # ln(1.2)/2 approximated
+
+def P_model(t, P):
+    return [k * P[0]]
+
+def double(t, P):
+    return P[0] - 600
+double.terminal = True
+
+sol = solve_ivp(P_model, [0, 20], [300], events=double)
+resultado = round(sol.t_events[0][0], 2)
+print(resultado)
+\end{verbatim} &   7.6           \\ \hline
+% Linha 18
+      37           &  A yeast grows at a rate proportional to its present size. If the original amount doubles in two hours, in how many hours will it triple?        &   
+Let $Y(t)$ denote the amount of yeast at time $t$ .
+
+Since the yeast grows at a rate proportional to its present size, it satisfies the differential equation
+
+$
+\frac{dY}{dt}=kY,
+$
+
+where $k$ is a positive constant.
+
+Solving the differential equation using 
+
+Separate  variables, we have $\frac{dY}{Y}=k\,dt.$
+
+Integrating both sides, $\ln |Y|=kt+C.$
+
+Exponentiating, $Y(t)=Ce^{kt}.$
+
+Let the initial amount be $Y_0$. Then $Y(0)=Y_0,$
+
+which implies $C=Y_0.$
+
+Hence, $Y(t)=Y_0e^{kt}.$
+Since the yeast doubles in two hours, $Y(2)=2Y_0.$
+
+Substituting into the solution, $2Y_0=Y_0e^{2k},$
+
+which simplifies to $e^{2k}=2.$
+
+Taking the natural logarithm, $2k=\ln 2,$ so $k=\frac{\ln 2}{2}.$
+
+The yeast triples when $Y(t)=3Y_0.$
+
+Using the growth model, $3Y_0=Y_0e^{kt},$
+
+or rather $3=e^{kt}.$
+
+Taking the natural logarithm, $ kt=\ln 3.$
+
+Substituting the value of $k$,
+$
+t=\frac{\ln 3}{\ln 2/2}
+=\frac{2\ln 3}{\ln 2}.
+$
+
+Therefore, $ t=\frac{2\ln 3}{\ln 2}\approx 3.17 hours.$
+
+Hence, the yeast will triple its original amount after
+
+$
+\frac{2\ln 3}{\ln 2}\approx 3.17hours
+$
+
+
+         &\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+k = 0.34657359027997264  
+
+def Y_model(t, Y):
+    return [k * Y[0]]
+
+def triple(t, Y):
+    return Y[0] - 3
+triple.terminal = True
+
+sol = solve_ivp(Y_model, [0, 10], [1], events=triple)
+resultado = round(sol.t_events[0][0], 2)
+print(resultado)
+\end{verbatim}      & 3.17        \\ \hline
+    % Linha 19   
+    38            & A body at a temperature of 0° F is placed in a room whose temperature is kept at 100° F If after 10 minutes the temperature of the body is 25° F, find the time required for the body to reach a temperature of 50° F?
+                &  Let $T(t)$ denote the temperature of the body (in °F) at time $t$ (minutes).
+
+According to Newton's Law of Cooling (or Heating), the temperature satisfies the differential equation $
+\frac{dT}{dt}=k(100-T),
+$ where $100^\circ F$ is the constant room temperature and $k>0$ is a constant.
+
+Solving  the differential equation using
+
+Separate  variables, we have $
+\frac{dT}{100-T}=k\,dt.
+$
+
+Integrating both sides, $-\ln|100-T|=kt+C.$
+
+Multiplying by $-1$, $\ln|100-T|=-kt+C_1.$
+
+Exponentiating, $100-T=Ce^{-kt}.$ Thus, $T(t)=100-Ce^{-kt}.$
+
+Using the initial condition $T(0)=0,$ we obtain $0=100-C,$ so $C=100.$
+
+Hence,$T(t)=100-100e^{-kt}.$ After 10 minutes,$T(10)=25.$ Substituting into the solution,$25=100-100e^{-10k},
+$ which simplifies to $100e^{-10k}=75,$
+
+or rather $e^{-10k}=\frac34.$ Taking the natural logarithm, $
+-10k=\ln\left(\frac34\right),
+$
+so $
+k=-\frac{1}{10}\ln\left(\frac34\right)
+=\frac{1}{10}\ln\left(\frac43\right).
+$
+
+
+Setting $
+T(t)=50.
+$ Then $
+50=100-100e^{-kt},
+$ which gives $
+e^{-kt}=\frac12.$
+
+Taking the natural logarithm, $
+-kt=\ln\left(\frac12\right),
+$ or rather $ t=\frac{\ln 2}{k}.$ Substituting the value of $k$, $
+t=\frac{\ln 2}{\frac{1}{10}\ln\left(\frac43\right)}
+=\frac{10\ln 2}{\ln\left(\frac43\right)}.
+$
+
+Therefore, $
+t\approx\frac{10(0.693147)}{0.287682}
+\approx24.09$ minutes.
+Hence, the body reaches a temperature of $50^\circ F $ after $
+{\frac{10\ln 2}{\ln\left(\frac43\right)}\approx24}	
+$
+
+            &\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+k = (1 / 10) * np.log(4 / 3)
+
+def newton_heating(t, y):
+    return [k * (100 - y[0])]
+
+def event_50(t, y):
+    return y[0] - 50
+
+event_50.terminal = True
+
+sol = solve_ivp(newton_heating, [0, 30], [0], events=event_50)
+resultado = round(sol.t_events[0][0])
+print(resultado)
+\end{verbatim} &   24               \\ \hline
+% Linha 20
+    39             & A body of unknown temperature is placed in a refrigerator at a constant temperature of 0° F If after 20 minutes the temperature of the body is 40° F and after 40 minutes the temperature of the body is 20° F, find the initial temperature of the body.               & 
+               Let $T(t)$ denote the temperature of the body (in °F) at time $t$ (minutes).
+
+According to Newton's Law of Cooling, the temperature satisfies the differential equation
+
+$
+\frac{dT}{dt}=-kT,
+$
+
+where the refrigerator is maintained at a constant temperature of $0^\circ F$ and $k>0$ is a constant. Solving the differential equation using Separate variables, we have $
+\frac{dT}{T}=-k\,dt.
+$
+Integrating both sides, $
+\ln|T|=-kt+C.
+$ Exponentiating,$
+T=Ce^{-kt}.
+$ Thus,
+
+$
+T(t)=Ce^{-kt}.
+$ Using the condition$
+T(20)=40,
+$ we obtain $
+40=Ce^{-20k}.
+$ Also, after $40$ minutes, $
+T(40)=20,
+$ so $
+20=Ce^{-40k}.
+$ Dividing the second equation by the first, $
+\frac{20}{40}
+=\frac{Ce^{-40k}}{Ce^{-20k}},
+$ which simplifies to $
+\frac12=e^{-20k}.
+$ Taking the natural logarithm, $
+-20k=\ln\left(\frac12\right),
+$ so $
+k=-\frac1{20}\ln\left(\frac12\right)
+=\frac{\ln2}{20}.
+$ Substituting this value of $k$ into $
+40=Ce^{-20k},
+$gives $
+40
+=C\left(\frac12\right),
+$ and therefore $
+C=80.
+$ Since $
+T(0)=C,
+$ the initial temperature of the body is
+
+$
+T(0)=80^\circ F.
+$
+
+Hence, the initial temperature of the body is
+
+$
+80^\circ F
+$ &   \begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+k = np.log(2) / 20
+
+def newton_cooling(t, y):
+    return [-k * y[0]]
+
+sol = solve_ivp(newton_cooling, [0, 40], [80], t_eval=[20, 40])
+
+T20 = sol.y[0][0]
+T40 = sol.y[0][1]
+
+resultado = round(80, 2)
+print(resultado)
+\end{verbatim}      & 80       \\ \hline
+% Linha 21
+    40             & A hot pie that was cooked at a constant temperature of 325° F is taken directly from an oven and placed outdoors in the shade to cool on a day when the air temperature in the shade is 85° F. After 5 minutes in the shade, the temperature of the pie had been reduced to 250° F. Determine the time required for the pie to reach 275° F.            & Let $T(t)$ denote the temperature of the pie (in °F) at time $t$ (minutes).
+
+According to Newton's Law of Cooling, the temperature satisfies the differential equation
+
+$
+\frac{dT}{dt}=k(85-T),
+$
+
+where $85^\circ F$ is the constant outdoor temperature and $k>0$ is a constant.
+
+Solving the differential equation using
+
+Separate variables, we have $ \frac{dT}{85-T}=k\,dt.$
+
+Integrating both sides, $-\ln|85-T|=kt+C.$
+
+Multiplying by $-1$, we have $\ln|85-T|=-kt+C_1.$
+
+Exponentiating, $85-T=Ce^{-kt}.$
+
+Thus, $T(t)=85-Ce^{-kt}.$
+
+Using the initial condition $ T(0)=325,$
+
+we obtain $ 325=85-C,$  so $ C=-240.$
+Hence,  $ T(t)=85+240e^{-kt}.$
+
+After 5 minutes, $T(5)=250.$
+
+Substituting into the solution, $250=85+240e^{-5k},$
+
+which simplifies to $ 240e^{-5k}=165,$
+
+or rather $e^{-5k}=\frac{165}{240}=\frac{11}{16}.$
+
+Taking the natural logarithm, $-5k=\ln\left(\frac{11}{16}\right),$
+
+so $ k=-\frac1{5}\ln\left(\frac{11}{16}\right) =\frac1{5}\ln\left(\frac{16}{11}\right).
+$
+
+Setting $T(t)=275,$ .Then $ 275=85+240e^{-kt},$  which gives $240e^{-kt}=190,$
+
+or rather $ e^{-kt}=\frac{190}{240}=\frac{19}{24}.$
+
+Taking the natural logarithm, $ -kt=\ln\left(\frac{19}{24}\right),$
+
+or rather $ t=\frac{\ln\left(\frac{24}{19}\right)}{k}.$
+
+Substituting the value of $k$,
+
+$ t=
+\frac{\ln\left(\frac{24}{19}\right)}
+{\frac1{5}\ln\left(\frac{16}{11}\right)}
+=\frac{5\ln\left(\frac{24}{19}\right)}
+{\ln\left(\frac{16}{11}\right)}.
+$
+
+Therefore, $
+t\approx
+\frac{5(0.233615)}
+{0.374693}
+\approx3.12 minutes.
+$
+
+Hence, the pie reaches a temperature of $275^\circ F$ after
+
+$
+\frac{5\ln\left(\frac{24}{19}\right)}
+{\ln\left(\frac{16}{11}\right)}
+\approx3.12 minutes
+$
+                &\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+k = (1/5) * np.log(16/11)
+
+def T_model(t, T):
+    return [k * (85 - T[0])]
+
+def reach_275(t, T):
+    return T[0] - 275
+reach_275.terminal = True
+
+sol = solve_ivp(T_model, [0, 20], [325], events=reach_275)
+resultado = round(sol.t_events[0][0], 2)
+print(resultado)
+\end{verbatim}& 3.12                \\ \hline
+
+41            & A cup of tea is prepared in a preheated cup with hot water so that the temperature of both the cup and the brewing
+tea is initially 190° F. The cup is then left to cool in a room kept at a constant 72° F. Two minutes later, the temperature of the tea is 150° F. Determine  the temperature of the tea after 5 minutes?
+
+
+              & Let $T(t)$ denote the temperature of the tea (in °F) at time $t$ (minutes).
+
+According to Newton's Law of Cooling, the temperature satisfies the differential equation
+
+$
+\frac{dT}{dt}=k(72-T),
+$
+
+where $72^\circ F$ is the constant room temperature and $k>0$ is a constant.
+
+Solving the differential equation using
+
+Separate variables, we have 
+$
+\frac{dT}{72-T}=k\,dt.
+$
+
+Integrating both sides, $-\ln|72-T|=kt+C.$
+
+Multiplying by $-1$,$\ln|72-T|=-kt+C_1.$ Exponentiating, $72-T=Ce^{-kt}.$
+
+Thus, $T(t)=72-Ce^{-kt}.$ Using the initial condition $T(0)=190,$
+
+we obtain $190=72-C,$ so$C=-118.$ Hence, $T(t)=72+118e^{-kt}.$
+
+After 2 minutes, $T(2)=150.$
+
+Substituting into the solution, $150=72+118e^{-2k},$
+
+which simplifies to $118e^{-2k}=78,$
+
+or rather $e^{-2k}=\frac{78}{118}=\frac{39}{59}.$
+
+Taking the natural logarithm, $-2k=\ln\left(\frac{39}{59}\right),$
+
+so $k=-\frac12\ln\left(\frac{39}{59}\right)
+=\frac12\ln\left(\frac{59}{39}\right).$
+
+Setting $t=5,$
+
+we obtain $T(5)=72+118e^{-5k}.$
+
+Substituting the value of $k$, $e^{-5k}=\left(e^{-2k}\right)^{5/2}
+=\left(\frac{39}{59}\right)^{5/2},$
+
+thus $T(5)=72+118\left(\frac{39}{59}\right)^{5/2}.$
+
+Therefore, $T(5)\approx72+118(0.3550)\approx113.89^\circ F.$
+
+Hence, the temperature of the tea after 5 minutes is
+
+$
+72+118\left(\frac{39}{59}\right)^{5/2}\approx113.89^\circ F.
+$
+               &\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+k = 0.5 * np.log(59/39)
+
+def T_model(t, T):
+    return [k * (72 - T[0])]
+
+sol = solve_ivp(T_model, [0, 5], [190], t_eval=[5])
+resultado = round(sol.y[0][0], 2)
+print(resultado)
+\end{verbatim} & 113.89  \\ \hline    
+42            & A bar of iron, previously heated to 1200° C, is cooled in a large bath of water maintained at a constant temperature
+of 50° C. The bar cools by 200° in the first minute. How much longer will it take to cool a second 200°?
+
+
+              & Let $T(t)$ denote the temperature of the iron bar (in °C) at time $t$ (minutes).
+
+According to Newton's Law of Cooling, the temperature satisfies the differential equation  $\frac{dT}{dt}=k(50-T),$
+
+where $50^\circ C$ is the constant temperature of the water bath and $k>0$ is a constant. Solving the differential equation using
+
+Separate variables, we have $\frac{dT}{50-T}=k\,dt.$
+
+Integrating both sides, $-\ln|50-T|=kt+C.$
+
+Multiplying by $-1$, $\ln|50-T|=-kt+C_1.$
+
+Exponentiating, $50-T=Ce^{-kt}.$ Thus, $T(t)=50-Ce^{-kt}.$ Using the initial condition $T(0)=1200,$we obtain $1200=50-C,$so$C=-1150.$
+
+Hence, $T(t)=50+1150e^{-kt}.$
+
+After 1 minute, the bar has cooled by $200^\circ C$, so $T(1)=1000.$
+
+Substituting into the solution, $1000=50+1150e^{-k},$ which simplifies to
+
+$1150e^{-k}=950,$or rather$e^{-k}=\frac{950}{1150}=\frac{19}{23}.$
+
+Taking the natural logarithm, $-k=\ln\left(\frac{19}{23}\right),$ so
+
+$k=-\ln\left(\frac{19}{23}\right)=\ln\left(\frac{23}{19}\right).$
+
+To determine the time required for the bar to cool another $200^\circ C$, we set$T(t)=800.$Then$800=50+1150e^{-kt},$ which gives
+$1150e^{-kt}=750,$ or rather $e^{-kt}=\frac{750}{1150}=\frac{15}{23}.$
+
+Taking the natural logarithm, $-kt=\ln\left(\frac{15}{23}\right),$
+
+or rather $t=\frac{\ln\left(\frac{23}{15}\right)}{k}.$
+
+Substituting the value of $k$, $t=
+\frac{\ln\left(\frac{23}{15}\right)}
+{\ln\left(\frac{23}{19}\right)}
+\approx2.26$  minutes.
+
+
+Since the first $200^\circ C$ cooling occurred during the first minute, the additional time required to cool the second $200^\circ C$ is
+
+$2.26-1=1.26$ minutes.
+
+Hence, the bar will take $\frac{\ln\left(\frac{23}{15}\right)}
+{\ln\left(\frac{23}{19}\right)}-1\approx1.26$ minutes.
+
+longer to cool a second $200^\circ C$. &\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+k = np.log(23/19)
+
+def T_model(t, T):
+    return [k * (50 - T[0])]
+
+def reach_800(t, T):
+    return T[0] - 800
+reach_800.terminal = True
+
+sol = solve_ivp(T_model, [0, 10], [1200], events=reach_800)
+resultado = round(sol.t_events[0][0] - 1, 2)
+print(resultado)
+\end{verbatim}& 1.26   \\ \hline   
+
+43            & A body of mass 3 slugs is dropped from a height of 500 ft in a with zero velocity. Assuming no air resistance, find for the velocity of the body at any time after 3 seconds?
+
+
+              &Let $v(t)$ denote the velocity of the body (in ft/s) at time $t$ (seconds).
+
+Since there is no air resistance, the only force acting on the body is its weight. According to Newton's Second Law, the motion satisfies the differential equation
+
+$m\frac{dv}{dt}=mg,$ where $m=3$ slugs and $g=32{ ft/s}^2$.
+
+Substituting these values into the differential equation, $3\frac{dv}{dt}=3(32),$
+
+which simplifies to $\frac{dv}{dt}=32.$
+
+Solving the differential equation using Separate variables, we have
+
+$dv=32\,dt.$
+
+Integrating both sides, $v=32t+C.$
+
+Using the initial condition $v(0)=0,$
+
+we obtain$0=32(0)+C,$so$C=0.$
+
+Hence,$v(t)=32t.$
+
+Setting$t=3,$ Then $v(3)=32(3),$ which gives $v(3)=96 ft/s.$
+
+Hence, the velocity of the body after $3$ seconds is
+
+$
+96ft/s$ downward
+  & \begin{verbatim}
+from scipy.integrate import solve_ivp
+
+def v_model(t, v):
+    return [32]
+
+sol = solve_ivp(v_model, [0, 3], [0], t_eval=[3])
+resultado = round(sol.y[0][0], 0)
+print(resultado)
+\end{verbatim} &  96  \\ \hline 
+44            & A body is dropped from a height of 300 ft with an initial velocity of 30 ft/sec. Assuming no air resistance, find the time required for the body to hit the ground.
+
+
+              &Let $v(t)$ denote the velocity of the body (in ft/s) at time $t$ (seconds).
+
+Since there is no air resistance, the only force acting on the body is its weight. According to Newton's Second Law, the motion satisfies the differential equation
+
+$m\frac{dv}{dt}=mg,$ where $g=32\text{ ft/s}^2$.
+
+Dividing both sides by $m$, we obtain
+
+$\frac{dv}{dt}=32.$
+
+Solving the differential equation using
+
+Separate variables, we have $dv=32\,dt.$
+
+Integrating both sides, $v=32t+C.$
+
+Using the initial condition $v(0)=30,$ we obtain $30=C,$
+
+so $v(t)=32t+30.$
+
+Let $s(t)$ denote the distance fallen by the body (in ft). Since
+
+$\frac{ds}{dt}=v(t),$ we have $\frac{ds}{dt}=32t+30.$
+
+Separating variables, $ds=32t+30)\,dt.$
+
+Integrating both sides,
+
+$s=16t^2+30t+C_1.$
+
+Using the initial condition
+
+$s(0)=0,$
+
+we obtain $0=C_1,$
+
+so $s(t)=16t^2+30t.$
+
+The body hits the ground after falling $300$ ft. Thus,
+
+$s(t)=300.$
+
+Substituting into the solution,
+
+$16t^2+30t=300,$
+
+or rather $16t^2+30t-300=0.$
+
+Applying the quadratic formula,
+
+$t=\frac{-30\pm\sqrt{30^2-4(16)(-300)}}{2(16)}.$
+
+Simplifying,$t=\frac{-30\pm\sqrt{20100}}{32}=\frac{-30\pm10\sqrt{201}}{32}.$
+
+Since time must be positive,
+
+$t=\frac{-30+10\sqrt{201}}{32}.$
+
+Therefore, $t\approx3.49{ seconds}.$
+
+Hence, the time required for the body to hit the ground is
+approximately 3.49  seconds.
+&\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+def s_model(t, s):
+    return [s[1], 32]
+
+def hit_ground(t, s):
+    return s[0] - 300
+hit_ground.terminal = True
+
+sol = solve_ivp(s_model, [0, 20], [0, 30], events=hit_ground)
+resultado = round(sol.t_events[0][0], 2)
+print(resultado)
+\end{verbatim}&  3.49 \\ \hline
+
+45            &A body of mass 2 slugs is dropped from a height of 450 ft with an initial velocity of 10 ft/sec. Assuming no air resistance, find the time required for the body to hit the ground.
+
+
+              & Let $v(t)$ denote the velocity of the body (in ft/s) at time $t$ (seconds).
+
+Since there is no air resistance, the only force acting on the body is its weight. According to Newton's Second Law, the motion satisfies the differential equation
+
+$m\frac{dv}{dt}=mg,$
+
+where $m=2$ slugs and $g=32{ ft/s}^2$.
+
+Substituting these values into the differential equation,
+
+$2\frac{dv}{dt}=2(32),$
+
+which simplifies to $\frac{dv}{dt}=32.$
+
+Solving the differential equation using
+
+Separate variables, we have $dv=32\,dt.$
+
+Integrating both sides, $v=32t+C.$
+
+Using the initial condition $v(0)=10,$
+
+we obtain $10=C,$ so $v(t)=32t+10.$
+
+Let $s(t)$ denote the distance fallen by the body (in ft). Since
+
+$\frac{ds}{dt}=v(t),$
+
+we have $\frac{ds}{dt}=32t+10.$
+
+Separating variables, $ds=32t+10)\,dt.$
+
+Integrating both sides, $s=16t^2+10t+C_1.$
+
+Using the initial condition $s(0)=0,$
+
+we obtain $0=C_1,$ so $s(t)=16t^2+10t.$
+
+The body hits the ground after falling $450$ ft. Thus, $s(t)=450.$
+
+Substituting into the solution,
+
+$16t^2+10t=450,$
+
+or rather $16t^2+10t-450=0.$
+
+Applying the quadratic formula,
+
+$t=\frac{-10\pm\sqrt{10^2-4(16)(-450)}}{2(16)}.$
+
+Simplifying, $t=\frac{-10\pm\sqrt{28900}}{32}=\frac{-10\pm170}{32}.$
+
+Since time must be positive,
+
+$t=\frac{160}{32}=5 $ seconds
+Hence, the time required for the body to hit the ground is
+
+$5$ seconds &\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+def s_model(t, s):
+    return [s[1], 32]
+
+def hit_ground(t, s):
+    return s[0] - 450
+hit_ground.terminal = True
+
+sol = solve_ivp(s_model, [0, 20], [0, 10], events=hit_ground)
+resultado = round(sol.t_events[0][0], 0)
+print(resultado)
+\end{verbatim}& 5   \\ \hline 
+46            &A body is propelled straight up with an initial velocity of 500 ft/sec in a vacuum with no air resistance. How long
+will it take the body to return to the ground?
+
+
+              & Let $v(t)$ denote the velocity of the body (in ft/s) at time $t$ (seconds).
+
+Since there is no air resistance, the only force acting on the body is its weight. According to Newton's Second Law, the motion satisfies the differential equation
+
+$m\frac{dv}{dt}=-mg,$
+
+where $g=32 ft/s^2$.
+
+Dividing both sides by $m$, we obtain $\frac{dv}{dt}=-32.$
+
+Solving the differential equation using
+
+Separate variables, we have
+
+$dv=-32\,dt.$
+
+Integrating both sides, $v=-32t+C.$
+
+Using the initial condition $v(0)=500,$
+
+we obtain $500=C,$
+
+so $v(t)=500-32t.$
+
+Let $s(t)$ denote the height of the body above the ground (in ft). Since
+
+$\frac{ds}{dt}=v(t),$ we have $\frac{ds}{dt}=500-32t.$
+
+Separating variables,
+
+$ds=(500-32t)\,dt.$
+
+Integrating both sides,
+
+$s=500t-16t^2+C_1.$
+
+Using the initial condition
+
+$s(0)=0,$
+
+we obtain$0=C_1,$
+
+so$s(t)=500t-16t^2.$
+
+The body returns to the ground when
+
+$s(t)=0.$
+
+Substituting into the solution,
+
+$500t-16t^2=0,$
+
+or rather$t(500-16t)=0.$
+
+Thus,$t=0$ or $t=\frac{500}{16}=31.25.$
+
+Discarding the initial time $t=0$, we conclude that $t=31.25$ seconds.
+
+Hence, the time required for the body to return to the ground is
+$31.25$ seconds
+
+ &\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+def s_model(t, s):
+    return [s[1], -32]
+
+def hit_ground(t, s):
+    return s[0]
+hit_ground.terminal = True
+hit_ground.direction = -1
+
+sol = solve_ivp(s_model, [0, 100], [0, 500], events=hit_ground)
+resultado = round(sol.t_events[0][0], 2)
+print(resultado)
+\end{verbatim}&  31.25 \\ \hline 
+ 47            &A ball is propelled straight up with an initial velocity of 250 ft/sec in a vacuum with no air resistance. How high
+will it go?
+
+
+              & Let $v(t)$ denote the velocity of the ball (in ft/s) at time $t$ (seconds).
+
+Since there is no air resistance, the only force acting on the ball is its weight. According to Newton's Second Law, the motion satisfies the differential equation
+
+$m\frac{dv}{dt}=-mg$, where $g=32\,\mathrm{ft/s^2}$.
+
+Dividing both sides by $m$, we obtain$\frac{dv}{dt}=-32.$
+
+Solving the differential equation using Separate variables, we have$dv=-32\,dt.$
+Integrating both sides,$v=-32t+C.$
+Using the initial condition
+$v(0)=250,$ we obtain$250=C,$ so$v(t)=250-32t.$
+
+Let $s(t)$ denote the height of the ball above the point of projection (in ft). Since$\frac{ds}{dt}=v(t),$
+
+we have $\frac{ds}{dt}=250-32t.$
+
+Separating variables, we have
+
+$ds=(250-32t)\,dt.$
+
+Integrating both sides,
+
+$s=250t-16t^2+C_1.$
+
+Using the initial condition
+
+$s(0)=0,$
+we obtain$0=C_1,$
+
+so$s(t)=250t-16t^2.$
+The ball reaches its maximum height when its velocity is zero. Thus,
+$v(t)=0.$
+Substituting into the velocity equation,$250-32t=0,$which gives
+
+$t=\frac{250}{32}=\frac{125}{16}$ seconds.
+
+Substituting this value of $t$ into the height equation,
+
+$s\!\left(\frac{125}{16}\right)
+=250\left(\frac{125}{16}\right)
+-16\left(\frac{125}{16}\right)^2.$
+
+Simplifying,$
+s=\frac{31250}{16}-\frac{15625}{16}
+=\frac{15625}{16}=976.5625$ ft.
+
+Hence, the maximum height reached by the ball is
+
+$\frac{15625}{16}$ft$\approx976.56 $ft
+
+
+ &\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+def s_model(t, s):
+    return [s[1], -32]
+
+def max_height(t, s):
+    return s[1]
+max_height.terminal = True
+max_height.direction = -1
+
+sol = solve_ivp(s_model, [0, 20], [0, 250], events=max_height)
+resultado = round(sol.y_events[0][0][0], 2)
+print(resultado)
+\end{verbatim}& 976.56  \\ \hline 
+  48           & A ball of mass 5 slugs is dropped from a height of 1000 ft. Find the limiting velocity of the ball if it encounters a force due to air resistance equal to -1/2 v?
+
+
+              &Let $v(t)$ denote the velocity of the ball (in ft/s) at time $t$ (seconds).
+
+The ball encounters two forces: its weight and the force due to air resistance. According to Newton's Second Law, the motion satisfies the differential equation
+$m\frac{dv}{dt}=mg-\frac12v,$
+where $m=5$ slugs and $g=32$ $(ft/s)^2$.
+
+Substituting these values into the differential equation,
+$5\frac{dv}{dt}=160-\frac12v,$
+which simplifies to
+$\frac{dv}{dt}+\frac1{10}v=32.$
+Solving the differential equation using
+The integrating factor is
+
+$\mu(t)=e^{\int\frac1{10}\,dt}=e^{t/10}.$
+
+Multiplying both sides of the differential equation by the integrating factor,
+$e^{t/10}\frac{dv}{dt}
++\frac1{10}e^{t/10}v=32e^{t/10},$
+which can be written as$
+\frac{d}{dt}\left(e^{t/10}v\right)
+=32e^{t/10}.$
+Integrating both sides,$e^{t/10}v
+=320e^{t/10}+C.$
+Hence,$v(t)=320+Ce^{-t/10}.$
+Using the initial condition
+$v(0)=0,$
+we obtain$0=320+C,$
+so$C=-320.$
+Hence,$v(t)=320\left(1-e^{-t/10}\right).$
+The limiting velocity is obtained by letting$t\to\infty.$
+Since$\lim_{t\to\infty}e^{-t/10}=0,$
+we have $\lim_{t\to\infty}v(t)=320.$
+
+Hence, the limiting velocity of the ball is 320 ft/s downward.
+
+
+ &\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def falling_ball(t, y):
+    return [32 - 0.1 * y[0]]
+
+sol = solve_ivp(falling_ball, [0, 100], [0], t_eval=[100])
+resultado = round(sol.y[0][0], 2)
+print(resultado)
+\end{verbatim}& 320  \\ \hline 
+
+ 49           & A body of mass 2 kg is dropped from a height of 200 m. Find the limiting velocity of the body if it encounters a
+resistance force equal to —50v?
+
+
+              &Let $v(t)$ denote the velocity of the body (in m/s) at time $t$ (seconds).
+
+The body encounters two forces: its weight and the force due to air resistance. According to Newton's Second Law, the motion satisfies the differential equation
+$m\frac{dv}{dt}=mg-50v,$
+where $m=2$ (kg) and $g=9.8(m/s)^2.$
+
+Substituting these values into the differential equation,
+$2\frac{dv}{dt}=19.6-50v,$
+which simplifies to
+$\frac{dv}{dt}+25v=9.8.$
+
+Solving the differential equation using The integrating factor is
+$\mu(t)=e^{\int25\,dt}
+=e^{25t}.$
+Multiplying both sides of the differential equation by the integrating factor,
+$e^{25t}\frac{dv}{dt}
++25e^{25t}v
+=9.8e^{25t},
+$which can be written as
+$\frac{d}{dt}\left(e^{25t}v\right)
+=9.8e^{25t}.$
+
+Integrating both sides,
+
+$e^{25t}v=\frac{9.8}{25}e^{25t}+C.$
+
+Hence,$v(t)=\frac{9.8}{25}+Ce^{-25t}.$
+
+Using the initial condition
+$v(0)=0,$
+we obtain$0=\frac{9.8}{25}+C,$
+
+so$C=-\frac{9.8}{25}.$
+
+Hence,$
+v(t)=\frac{9.8}{25}\left(1-e^{-25t}\right).$
+
+The limiting velocity is obtained by letting$t\to\infty.$
+
+Since
+$\lim_{t\to\infty}e^{-25t}=0,$ we have$\lim_{t\to\infty}v(t)=\frac{9.8}{25}=0.392.$
+
+Hence, the limiting velocity of the body is
+$\frac{9.8}{25}$ m/s$\approx0.392 $m/s downward
+
+
+ &\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def falling_body(t, y):
+    return [9.8 - 25 * y[0]]
+
+sol = solve_ivp(falling_body, [0, 10], [0], t_eval=[10])
+resultado = round(sol.y[0][0], 3)
+print(resultado)
+\end{verbatim}&0.392   \\ \hline 
+
+ 50           & A body of mass 10 slugs is dropped from a height of 1000 ft with no initial velocity. The body encounters an air resistance proportional to its velocity. If the limiting velocity is known to be 320 ft/sec, find  the time required for the body to attain a velocity of 160 ft/sec.
+
+
+              &Let $v(t)$ denote the velocity of the body (in ft/sec) at time $t$ (seconds).
+The body encounters two forces: its weight and the force due to air resistance. According to Newton's Second Law, the motion satisfies the differential equation $m\frac{dv}{dt}=mg-kv,$
+where $m=10$ (slugs), $g=32$ (ft/s$^2$), and $k$ is the constant of proportionality.
+The limiting (terminal) velocity is given by
+$v_T=\frac{mg}{k}.$
+Since the limiting velocity is $320$ ft/sec,
+$320=\frac{10(32)}{k}=\frac{320}{k},$
+which gives $k=1.$
+Substituting these values into the differential equation, $10\frac{dv}{dt}=320-v,$
+which simplifies to $\frac{dv}{dt}+\frac{1}{10}v=32.$
+Solving the differential equation using the integrating factor, we have
+$\mu(t)=e^{\int\frac{1}{10}\,dt}=e^{t/10}.$
+Multiplying both sides of the differential equation by the integrating factor,
+$e^{t/10}\frac{dv}{dt}+\frac{1}{10}e^{t/10}v=32e^{t/10},$
+which can be written as
+$\frac{d}{dt}\left(e^{t/10}v\right)=32e^{t/10}.$
+Integrating both sides,$e^{t/10}v=320e^{t/10}+C.$
+Hence,$v(t)=320+Ce^{-t/10}.$
+Using the initial condition
+$v(0)=0,$ we obtain $0=320+C,$so$C=-320.$
+Hence, $v(t)=320\left(1-e^{-t/10}\right).$
+To determine the time required for the body to attain a velocity of $160$ ft/sec, let $v(t)=160.$
+Then $160=320\left(1-e^{-t/10}\right),$
+which simplifies to
+$\frac{1}{2}=1-e^{-t/10},$
+or $e^{-t/10}=\frac{1}{2}.$
+Taking the natural logarithm of both sides,
+$-\frac{t}{10}=\ln\left(\frac{1}{2}\right)=-\ln 2.$
+Therefore, $t=10\ln 2 $ $\approx 6.93$ seconds
+Hence, the body requires $10\ln 2\ $seconds $\approx 6.93$seconds  to attain a velocity of $160$ ft/sec.
+
+ &\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+def v_model(t, v):
+    return [32 - 0.1 * v[0]]
+
+def reach_160(t, v):
+    return v[0] - 160
+reach_160.terminal = True
+
+sol = solve_ivp(v_model, [0, 20], [0], events=reach_160)
+resultado = round(sol.t_events[0][0], 2)
+print(resultado)
+\end{verbatim}& 6.93 \\ \hline 
+ 
+ 51          & A body weighing 8 Ib is dropped from a great height with no initial velocity. As it falls, the body encounters a force due to air resistance proportional to its velocity. If the limiting velocity of this body is 4 ft/sec, find the velocity of the body at after 10 seconds?
+
+
+              &Let $v(t)$ denote the velocity of the body (in ft/sec) at time $t$ (seconds).
+The body encounters two forces: its weight and the force due to air resistance. According to Newton's Second Law, the motion satisfies the differential equation $m\frac{dv}{dt}=mg-kv,$ where the weight of the body is $W=8$ lb. Since $W=mg$ and $g=32$ ft/s$^2$,
+$m=\frac{W}{g}=\frac{8}{32}=\frac{1}{4}$ slug.
+The limiting (terminal) velocity is given by
+$v_T=\frac{mg}{k}=\frac{W}{k}.$
+Since the limiting velocity is $4$ ft/sec,
+$4=\frac{8}{k},$ which gives $k=2.$
+Substituting these values into the differential equation, $\frac{1}{4}\frac{dv}{dt}=8-2v,$
+which simplifies to $\frac{dv}{dt}+8v=32.$
+Solving the differential equation using the integrating factor, we have
+$\mu(t)=e^{\int 8\,dt}=e^{8t}.$
+Multiplying both sides of the differential equation by the integrating factor,
+$e^{8t}\frac{dv}{dt}+8e^{8t}v=32e^{8t},$
+which can be written as
+$\frac{d}{dt}\left(e^{8t}v\right)=32e^{8t}.$
+Integrating both sides,
+$e^{8t}v=4e^{8t}+C.$ Hence, $v(t)=4+Ce^{-8t}.$
+Using the initial condition
+$v(0)=0,$ we obtain $0=4+C,$ so $C=-4.$
+
+Hence,$v(t)=4\left(1-e^{-8t}\right).$
+To determine the velocity after $10$ seconds, substitute $t=10$: $v(10)=4\left(1-e^{-80}\right).$
+Since $e^{-80}\approx1.805\times10^{-35}$,
+$v(10)\approx4(1-1.805\times10^{-35})
+\approx4.00$ft/sec
+
+Hence, the velocity of the body after $10$ seconds is
+
+$v(10)=4\left(1-e^{-80}\right)$ $\approx4.00 $ft/sec
+
+ &\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+def v_model(t, v):
+    return [32 - 8 * v[0]]
+
+sol = solve_ivp(v_model, [0, 10], [0], t_eval=[10])
+resultado = round(sol.y[0][0], 0)
+print(resultado)
+\end{verbatim}& 4 \\ \hline 
+  
+ 52           & A body weighing 160 Ib is dropped 2000 ft above ground with no initial velocity. As it falls, the body encounters a force due to air resistance proportional to its velocity. If the limiting velocity of this body is 320 ft/sec, find the position of the body after 2 seconds?
+
+
+              &Let $v(t)$ denote the velocity of the body (in ft/sec) at time $t$ (seconds), and let $y(t)$ denote the distance fallen (in ft) after $t$ seconds.
+
+The body encounters two forces: its weight and the force due to air resistance. According to Newton's Second Law, the motion satisfies the differential equation $m\frac{dv}{dt}=mg-kv,$ where the weight of the body is $W=160$ lb. Since $W=mg$ and $g=32$ ft/s$^2$,
+$m=\frac{W}{g}=\frac{160}{32}=5$ slugs
+The limiting (terminal) velocity is given by
+$v_T=\frac{mg}{k}=\frac{W}{k}.$
+Since the limiting velocity is $320$ ft/sec,
+$320=\frac{160}{k},$
+which gives $k=\frac{1}{2}.$
+Substituting these values into the differential equation, $5\frac{dv}{dt}=160-\frac{1}{2}v,$
+which simplifies to
+$\frac{dv}{dt}+\frac{1}{10}v=32.$
+Solving the differential equation using the integrating factor, we have
+$\mu(t)=e^{\int\frac{1}{10}\,dt}=e^{t/10}.$
+Multiplying both sides of the differential equation by the integrating factor,
+$e^{t/10}\frac{dv}{dt}+\frac{1}{10}e^{t/10}v=32e^{t/10},$
+which can be written as 
+$\frac{d}{dt}\left(e^{t/10}v\right)=32e^{t/10}.$
+Integrating both sides, $e^{t/10}v=320e^{t/10}+C.$
+Hence, $v(t)=320+Ce^{-t/10}.$
+Using the initial condition $v(0)=0,$
+we obtain $0=320+C,$
+so $C=-320.$ Hence,
+$v(t)=320\left(1-e^{-t/10}\right).$
+Since velocity is the derivative of the distance fallen,
+$\frac{dy}{dt}=v(t)=320\left(1-e^{-t/10}\right).$
+Integrating,
+$y(t)=\int320\left(1-e^{-t/10}\right)\,dt
+=320t+3200e^{-t/10}+C_1.$
+Using the initial condition
+$y(0)=0,$ we obtain $0=0+3200+C_1,$so $C_1=-3200.$
+Hence,$y(t)=320t+3200e^{-t/10}-3200.$
+The body is initially $2000$ ft above the ground. Therefore, its height above the ground at time $t$ is
+$h(t)=2000-y(t).$ At $t=2$ seconds,$y(2)=320(2)+3200e^{-0.2}-3200.$
+Since $e^{-0.2}\approx0.818731$,
+$y(2)\approx640+3200(0.818731)-3200
+\approx59.94$ ft
+Therefore, $h(2)=2000-59.94
+\approx1940.06$ ft
+Hence, the position of the body after $2$ seconds is
+1940.06 ft above the ground.
+
+ &\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+def y_model(t, y):
+    return [y[1], 32 - 0.1 * y[1]]
+
+sol = solve_ivp(y_model, [0, 2], [0, 0], t_eval=[2])
+position = 2000 - sol.y[0][0]
+resultado = round(position, 2)
+print(resultado)
+\end{verbatim}& 1940.06 \\ \hline 
+ 53           & A tank contains 100 gal of brine made by dissolving 80 Ib of salt in water. Pure water runs into the tank at the rate of 4 gal/min, and the well-stirred mixture runs out at the same rate. Find the time required for half the salt to leave the tank.
+
+
+              &Let $S(t)$ denote the amount of salt in the tank (in lb) at time $t$ (minutes).Initially, the tank contains $80$ lb of salt, so $S(0)=80.$ Since pure water enters the tank at a rate of $4$ gal/min and the well stirred mixture leaves at the same rate, the volume of liquid remains constant:
+$V(t)=100\text{ gal}.$ Since pure water contains no salt, the rate at which salt enters the tank is $\text{Rate in}=0.$ The concentration of salt in the tank at time $t$ is $\frac{S(t)}{100}\text{ lb/gal}.$ The mixture leaves the tank at a rate of $4$ gal/min. Therefore, the rate at which salt leaves is $\text{Rate out}=4\left(\frac{S(t)}{100}\right)
+=\frac{S(t)}{25}\text{ lb/min}.$
+The differential equation is given by
+$\frac{dS}{dt}=0-\frac{S}{25},$
+or $\frac{dS}{dt}+\frac{1}{25}S=0.$
+Solving the differential equation using the integrating factor, we have
+$\mu(t)=e^{\int\frac{1}{25}\,dt}=e^{t/25}.$
+
+Multiplying both sides by the integrating factor,
+
+$e^{t/25}\frac{dS}{dt}
++\frac{1}{25}e^{t/25}S=0,$
+
+which can be written as $\frac{d}{dt}\left(e^{t/25}S\right)=0.$
+Integrating both sides, $e^{t/25}S=C.$
+Hence, $S(t)=Ce^{-t/25}.$
+Using the initial condition $S(0)=80$,$80=C.$
+Therefore, $S(t)=80e^{-t/25}.$
+
+The problem asks for the time required for half of the original salt to leave the tank.
+
+Initially, there are $80$ lb of salt. Therefore, when half has left, the amount remaining is $S(t)=\frac{80}{2}=40$ lb
+
+Substituting into the solution, $40=80e^{-t/25}.$
+
+Dividing both sides by $80$, $\frac{1}{2}=e^{-t/25}.$
+
+Taking the natural logarithm of both sides,
+
+$\ln\left(\frac{1}{2}\right)=-\frac{t}{25}.$ Since $\ln(1/2)=-\ln 2$, $-\ln 2=-\frac{t}{25}.$
+
+Therefore, $t=25\ln 2.$ Since $\ln 2\approx0.6931$,
+
+$t\approx25(0.6931)\approx17.33$ minutes
+
+Hence, the time required for half the salt to leave the tank is $ t=25\ln 2\approx17.33$ minutes
+
+ &\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+def S_model(t, S):
+    return [-S[0] / 25]
+
+def half_salt(t, S):
+    return S[0] - 40
+half_salt.terminal = True
+
+sol = solve_ivp(S_model, [0, 100], [80], events=half_salt)
+resultado = round(sol.t_events[0][0], 2)
+print(resultado)
+\end{verbatim}& 17.33 \\ \hline 
+ 54          & A tank contains 100 gal of brine made by dissolving 60 Ib of salt in water. Salt water containing 1 Ib of salt per
+gallon runs in at the rate of 2 gal/min and the well-stirred mixture runs out at the same rate of 3 gal/min. Find the
+amount of salt in the tank after 30 minutes.
+
+
+              &Let $S(t)$ denote the amount of salt in the tank at time $t$ (in pounds).Initially, the tank contains $100$ gallons of brine with $60$ pounds of salt. Therefore,$S(0)=60.$
+
+The solution enters the tank at a rate of $2$ gal/min, while the well stirred mixture leaves at a rate of $3$ gal/min. Therefore, the volume of liquid in the tank is not constant.
+The volume at time $t$ is $V(t)=100+2t-3t=100-t.$ After $30$ minutes, the volume is still positive: $V(30)=100-30=70\text{ gal}.$ The incoming brine contains $1$ lb of salt per gallon and enters at a rate of $2$ gal/min. Therefore, the rate at which salt enters the tank is $\text{Rate in}=2(1)=2\text{ lb/min}.$
+At time $t$, the concentration of salt in the tank is $\frac{S(t)}{100-t}\text{ lb/gal}.$
+
+Since the mixture leaves at a rate of $3$ gal/min, the rate at which salt leaves the tank is $\text{Rate out}=3\left(\frac{S(t)}{100-t}\right)
+=\frac{3S(t)}{100-t}\text{ lb/min}.$ The differential equation is given by  $\frac{dS}{dt}=2-\frac{3S}{100-t}.$
+Rearranging, $\frac{dS}{dt}+\frac{3}{100-t}S=2.$
+This is a linear first order differential equation. The integrating factor is
+$\mu(t)=e^{\int\frac{3}{100-t}\,dt}.$
+Since $\int\frac{3}{100-t}\,dt=-3\ln(100-t),$
+we obtain $\mu(t)=(100-t)^{-3}.$
+Multiplying the differential equation by the integrating factor,
+$(100-t)^{-3}\frac{dS}{dt}+3(100-t)^{-4}S
+=2(100-t)^{-3}.$
+
+The left hand side can be written as
+$\frac{d}{dt}\left[S(100-t)^{-3}\right]
+=2(100-t)^{-3}.$
+Integrating both sides, $S(100-t)^{-3}=(100-t)^{-2}+C.$
+Therefore, $S(t)=(100-t)+C(100-t)^3.$
+Using the initial condition $S(0)=60$, $60=100+C(100)^3.$
+Thus, $60=100+1,000,000C,$
+so $C=-\frac{40}{1,000,000}=-4\times10^{-5}.$
+Therefore, the amount of salt at time $t$ is $S(t)=(100-t)-4\times10^{-5}(100-t)^3.$
+We now find the amount of salt after $30$ minutes:
+$S(30)=70-4\times10^{-5}(70)^3.$
+ Since $70^3=343000,$ we obtain $S(30)=70-4\times10^{-5}(343000).$
+Thus, $S(30)=70-13.72,$ so $S(30)=56.28 $ lb.
+.
+Hence, the amount of salt in the tank after $30$ minutes is 56.28 lb of salt.
+
+ &\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+def S_model(t, S):
+    return [2 - 3 * S[0] / (100 - t)]
+
+sol = solve_ivp(S_model, [0, 30], [60], t_eval=[30])
+resultado = round(sol.y[0][0], 2)
+print(resultado)
+\end{verbatim}& 56.28 \\ \hline 
+ 55           & A tank initially contains 350 liters of brine with 10 kg of salt. Pure water begins to be added to the tank at a rate of 20 L/min, while the mixture leaves the tank at the same rate. Determine the amount of salt in the tank after 5 minutes.
+
+
+              &Let $S(t)$ denote the amount of salt in the tank at time $t$ (in kilograms).
+Initially, the tank contains $350$ liters of brine with $10$ kg of salt. Therefore,
+$S(0)=10.$
+Since pure water enters the tank at a rate of $20$ L/min and the well stirred mixture leaves at the same rate, the volume of liquid in the tank remains constant:
+$V(t)=350\text{ L}.$
+The incoming water contains no salt. Therefore, the rate at which salt enters the tank is
+$\text{Rate in}=0\text{ kg/min}.$At time $t$, the concentration of salt in the tank is
+$\frac{S(t)}{350}\text{ kg/L}.$
+Since the mixture leaves the tank at a rate of $20$ L/min, the rate at which salt leaves the tank is $\text{Rate out}=20\left(\frac{S(t)}{350}\right)
+=\frac{2S(t)}{35}\text{ kg/min}.$ Using $\text{Rate of change}=\text{Rate in}-\text{Rate out},$
+we obtain the differential equation $\frac{dS}{dt}=-\frac{2S}{35}.$
+Rearranging, $\frac{dS}{dt}+\frac{2}{35}S=0.$
+This is a separable differential equation. Separating the variables,
+$\frac{1}{S}\,dS=-\frac{2}{35}\,dt.$
+Integrating both sides, $\ln|S|=-\frac{2}{35}t+C.$
+Therefore, $S(t)=Ce^{-2t/35}.$
+Using the initial condition $S(0)=10$, $10=C.$  Hence, $S(t)=10e^{-2t/35}.$
+We now find the amount of salt after $5$ minutes: $S(5)=10e^{-2(5)/35}.$
+Thus, $S(5)=10e^{-2/7}.$ Using $e^{-2/7}\approx0.751477,$ we obtain $S(5)\approx10(0.751477).$
+
+Therefore, $S(5)\approx7.52$ kg.
+
+&\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+def S_model(t, S):
+    return [-2 * S[0] / 35]
+
+sol = solve_ivp(S_model, [0, 5], [10], t_eval=[5])
+resultado = round(sol.y[0][0], 2)
+print(resultado)
+\end{verbatim} &  7.52\\ \hline 
+ 56           & A body of mass 2 kg is dropped from a height of 200 m. Find the limiting velocity of the body if it encounters a
+resistance force equal to —50v?
+
+
+              &Let $S(t)$ denote the amount of salt in the tank (in lb) at time $t$ (minutes).
+
+Initially, the tank contains $60$ lb of salt, so
+$S(0)=60.$
+The tank initially contains $100$ gal of brine. Salt water enters at a rate of $2$ gal/min, while the well stirred mixture leaves at a rate of $3$ gal/min.
+Therefore, the volume of liquid in the tank is not constant. The volume after $t$ minutes is
+$V(t)=100+2t-3t=100-t.$
+Thus, $V(t)=100-t$gal
+The incoming salt water contains $1$ lb of salt per gallon and enters at a rate of $2$ gal/min. Therefore, the rate at which salt enters the tank is
+$\text{Rate in}=2(1)=2\text{ lb/min}.$ The concentration of salt in the tank at time $t$ is
+$\frac{S(t)}{100-t}\text{ lb/gal}.$
+Since the mixture leaves the tank at a rate of $3$ gal/min, the rate at which salt leaves is $\text{Rate out}=3\left(\frac{S(t)}{100-t}\right)
+=\frac{3S(t)}{100-t}\text{ lb/min}.$
+According to the principle
+$\text{Rate of change}=\text{Rate in}-\text{Rate out},$
+the differential equation is $\frac{dS}{dt}=2-\frac{3S}{100-t},$
+or $\frac{dS}{dt}+\frac{3}{100-t}S=2.$ This is a first order linear differential equation.
+The integrating factor is $\mu(t)=e^{\int\frac{3}{100-t}\,dt}.$
+Since $\int\frac{3}{100-t}\,dt=-3\ln(100-t),$ we obtain $\mu(t)=e^{-3\ln(100-t)}
+=\frac{1}{(100-t)^3}.$ Multiplying both sides of the differential equation by the integrating factor, $\frac{1}{(100-t)^3}\frac{dS}{dt}
++\frac{3S}{(100-t)^4}=\frac{2}{(100-t)^3},$
+which can be written as $\frac{d}{dt}\left(\frac{S}{(100-t)^3}\right)
+=\frac{2}{(100-t)^3}.$ Integrating both sides, $\frac{S}{(100-t)^3}=\frac{1}{(100-t)^2}+C.$
+Therefore, $S(t)=100-t+C(100-t)^3.$
+Using the initial condition $S(0)=60$, $60=100+C(100)^3.$
+Thus, $60=100+1,000,000C,$ which gives $C=-\frac{40}{1,000,000}=-\frac{1}{25,000}.$
+Hence, $S(t)=100-t-\frac{(100-t)^3}{25,000}.$
+The problem asks for the amount of salt after $30$ minutes. Substituting $t=30$,
+$S(30)=100-30-\frac{(100-30)^3}{25,000}.$
+Therefore, $S(30)=70-\frac{70^3}{25,000}.$ Since $70^3=343,000,$ we obtain $S(30)=70-\frac{343,000}{25,000}.$ Thus, $S(30)=70-13.72=56.28$ lb
+Hence, the amount of salt in the tank after $30$ minutes is 56.28 lb
+
+ &\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+def S_model(t, S):
+    return [2 - 3 * S[0] / (100 - t)]
+
+sol = solve_ivp(S_model, [0, 30], [60], t_eval=[30])
+resultado = round(sol.y[0][0], 2)
+print(resultado)
+\end{verbatim}& 56.28 \\ \hline 
+ 57           & A tank contains 40 1 of solution containing 2 g of substance per liter. Salt water containing 3 g of this substance
+per liter runs in at the rate of 4 1/min and the well-stirred mixture runs out at the same rate. Find the amount of
+substance in the tank after 15 minutes.
+
+
+              &Let $S(t)$ denote the amount of substance in the tank (in grams) at time $t$ (minutes).
+Initially, the tank contains $40$ L of solution with $2$ g of substance per liter. Therefore, the initial amount of substance is
+$S(0)=40(2)=80\text{ g}.$
+Since the solution enters the tank at a rate of $4$ L/min and the well stirred mixture leaves at the same rate, the volume of liquid in the tank remains constant:
+$V(t)=40\text{ L}.$
+The incoming solution contains $3$ g of substance per liter and enters at a rate of $4$ L/min. Therefore, the rate at which the substance enters the tank is
+$\text{Rate in}=4(3)=12\text{ g/min}.$
+The concentration of the substance in the tank at time $t$ is
+$\frac{S(t)}{40}\text{ g/L}.$
+Since the mixture leaves the tank at a rate of $4$ L/min, the rate at which the substance leaves is
+$\text{Rate out}=4\left(\frac{S(t)}{40}\right)
+=\frac{S(t)}{10}\text{ g/min}.$
+According to the principle
+$\text{Rate of change}=\text{Rate in}-\text{Rate out},$
+the differential equation is $\frac{dS}{dt}=12-\frac{S}{10},$
+or $\frac{dS}{dt}+\frac{1}{10}S=12.$
+Solving the differential equation using the integrating factor, we have
+$\mu(t)=e^{\int\frac{1}{10}\,dt}=e^{t/10}.$
+Multiplying both sides of the differential equation by the integrating factor,
+$e^{t/10}\frac{dS}{dt}
++\frac{1}{10}e^{t/10}S
+=12e^{t/10},$
+which can be written as
+$\frac{d}{dt}\left(e^{t/10}S\right)=12e^{t/10}.$
+Integrating both sides, $e^{t/10}S=120e^{t/10}+C.$
+Hence, $S(t)=120+Ce^{-t/10}.$
+Using the initial condition $S(0)=80$,
+$80=120+C,$ so $C=-40.$
+Therefore,$S(t)=120-40e^{-t/10}.$
+The problem asks for the amount of substance after $15$ minutes. Substituting $t=15$,
+$S(15)=120-40e^{-15/10}.$
+Thus, $S(15)=120-40e^{-1.5}.$
+Since $e^{-1.5}\approx0.22313$,
+$S(15)\approx120-40(0.22313).$
+Therefore, $S(15)\approx120-8.925=111.075$ g.
+Hence, the amount of substance in the tank after $15$ minutes is $S(15)\approx111.08 $g.
+ &\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+def S_model(t, S):
+    return [12 - S[0] / 10]
+
+sol = solve_ivp(S_model, [0, 15], [80], t_eval=[15])
+resultado = round(sol.y[0][0], 2)
+print(resultado)
+\end{verbatim}& 111.08 \\ \hline 
+ 58           & A tank contains 40 1 of a chemical solution prepared by dissolving 80 g of a soluble substance in fresh water. Fluid
+containing 2 g of this substance per liter runs in at the rate of 3 I/mm and the well-stirred mixture runs out at the same rate. Find the amount of substance in the tank after 20 minutes.
+
+
+              &Let $S(t)$ denote the amount of substance in the tank (in grams) at time $t$ (minutes).
+
+Initially, the tank contains $40$ L of solution with $80$ g of the substance. Therefore,
+
+$S(0)=80\text{ g}.$
+
+Since the solution enters the tank at a rate of $3$ L/min and the well stirred mixture leaves at the same rate, the volume of liquid in the tank remains constant:
+
+$V(t)=40\text{ L}.$
+The incoming fluid contains $2$ g of the substance per liter and enters at a rate of $3$ L/min. Therefore, the rate at which the substance enters the tank is $\text{Rate in}=3(2)=6\text{ g/min}.$
+
+The concentration of the substance in the tank at time $t$ is $\frac{S(t)}{40}\text{ g/L}.$
+Since the mixture leaves the tank at a rate of $3$ L/min, the rate at which the substance leaves is
+$\text{Rate out}=3\left(\frac{S(t)}{40}\right)
+=\frac{3S(t)}{40}\text{ g/min}.$
+According to the principle
+$\text{Rate of change}=\text{Rate in}-\text{Rate out},$ the differential equation is
+$\frac{dS}{dt}=6-\frac{3S}{40},$
+or $\frac{dS}{dt}+\frac{3}{40}S=6.$
+Solving the differential equation using the integrating factor, we have
+$\mu(t)=e^{\int\frac{3}{40}\,dt}
+=e^{3t/40}.$
+Multiplying both sides of the differential equation by the integrating factor,
+$e^{3t/40}\frac{dS}{dt}
++\frac{3}{40}e^{3t/40}S
+=6e^{3t/40},$
+which can be written as
+$\frac{d}{dt}\left(e^{3t/40}S\right)
+=6e^{3t/40}.$
+
+Integrating both sides, $e^{3t/40}S =80e^{3t/40}+C.$
+Hence, $S(t)=80+Ce^{-3t/40}.$
+Using the initial condition $S(0)=80$, $80=80+C,$
+so $C=0.$
+Therefore, $S(t)=80$ g
+This result makes physical sense because the incoming fluid has a concentration of $2$ g/L, and the initial concentration in the tank is also
+$\frac{80}{40}=2\text{ g/L}.$
+Thus, the concentration remains constant throughout the process. Therefore, after $20$ minutes, $S(20)=80$ g.
+Hence, the amount of substance in the tank after $20$ minutes is 80  g.
+
+ &\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+def S_model(t, S):
+    return [6 - 3 * S[0] / 40]
+
+sol = solve_ivp(S_model, [0, 20], [80], t_eval=[20])
+resultado = round(sol.y[0][0], 0)
+print(resultado)
+\end{verbatim}&  80\\ \hline 
+ 59           &  A metal bar at an unknown initial temperature is placed in a room that is held at a constant temperature of \(60^\circ\mathrm{F}\). 
+After \(2\) minutes, the bar's temperature is \(0^\circ\mathrm{F}\), and after \(8\) minutes, its temperature is \(20^\circ\mathrm{F}\).
+Assuming the bar's temperature is uniform at all times and that it obeys Newton's Law of Cooling, find its initial temperature
+
+
+              &Let $T(t)$ denote the temperature of the metal bar (in ${}^\circ\mathrm{F}$) at time $t$ (minutes).
+
+According to Newton's Law of Cooling, the rate of change of the temperature of the bar is proportional to the difference between its temperature and the surrounding temperature. Since the room is maintained at a constant temperature of $60^\circ\mathrm{F}$, the temperature satisfies the differential equation $\frac{dT}{dt}=k(60-T),$ where $k>0$ is a constant. Rearranging,
+$\frac{dT}{dt}+kT=60k.$
+
+Solving the differential equation, we obtain $T(t)=60+Ce^{-kt}.$
+We are given that after $2$ minutes, the temperature is $0^\circ\mathrm{F}$ or rather $T(2)=0.$
+Therefore, $0=60+Ce^{-2k},$ so
+$Ce^{-2k}=-60.$  We are also given that after $8$ minutes, the temperature is $20^\circ\mathrm{F}$:
+$T(8)=20.$ Therefore, $20=60+Ce^{-8k},$ which gives
+$Ce^{-8k}=-40.$ Dividing the two equations, $\frac{Ce^{-8k}}{Ce^{-2k}}=\frac{-40}{-60}.$
+Thus,$e^{-6k}=\frac{2}{3}.$
+Taking the natural logarithm of both sides, $-6k=\ln\left(\frac{2}{3}\right),$ so $k=-\frac{1}{6}\ln\left(\frac{2}{3}\right)
+=\frac{1}{6}\ln\left(\frac{3}{2}\right).$ Now, from $Ce^{-2k}=-60,$ we obtain $C=-60e^{2k}.$ Since
+$2k=\frac{1}{3}\ln\left(\frac{3}{2}\right),$ we have
+$e^{2k}=\left(\frac{3}{2}\right)^{1/3}.$
+Therefore, $C=-60\left(\frac{3}{2}\right)^{1/3}.$
+The initial temperature is $T(0)$:
+$T(0)=60+C.$Hence,$T(0)=60-60\left(\frac{3}{2}\right)^{1/3}.$
+Since $\left(\frac{3}{2}\right)^{1/3}\approx1.144714,$
+we obtain $T(0)\approx60-60(1.144714)$ $T(0)\approx-8.68^\circ\mathrm{F}.$ Therefore, the initial temperature of the metal bar was $T(0)=60\left[1-\left(\frac{3}{2}\right)^{1/3}\right]\approx-8.68^\circ\mathrm{F}.$
+
+ &\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+k = np.log(3 / 2) / 6
+
+def newton_cooling(t, y):
+    return [k * (60 - y[0])]
+
+sol = solve_ivp(newton_cooling, [0, 8], [0], t_eval=[0, 8])
+
+T2 = sol.y[0][0]
+T8 = sol.y[0][1]
+
+T0 = 60 - 60 * (3 / 2) ** (1 / 3)
+resultado = round(T0, 2)
+print(resultado)
+\end{verbatim}& -8.68 \\ \hline 
+ 60           & One hundred bacteria strands are placed in a nutrient solution with plentiful food but limited space. The population stabilizes at a carrying capacity of $1000$ strands. The growth rate is proportional to the product of the current population and the difference between the carrying capacity and the current population (logistic growth). After $7$ hours, there are $200$ strands. Estimate the number of bacteria strands present after $10$ hours.
+
+
+              &Let $P(t)$ be the bacteria population (in strands) at time $t$ (in hours). 
+The ODE growth model is
+$\displaystyle \frac{dP}{dt} = kP(1000 - P), \qquad k > 0,$
+with carrying capacity $K = 1000$. The standard solution is
+
+$\displaystyle P(t) = \frac{1000}{1 + A e^{-1000kt}},
+\qquad A = \frac{1000 - P(0)}{P(0)}.$
+We are given the initial population as 
+$P(0) = 100.$ Thus, $A = \frac{1000 - 100}{100} = 9,$
+
+and so $\displaystyle P(t) = \frac{1000}{1 + 9 e^{-1000kt}}.$ Now use the condition $P(7) = 200$. Substituting  $t = 7$ we have
+$\displaystyle 200 = \frac{1000}{1 + 9 e^{-7000k}}$
+or rather $\displaystyle 1 + 9 e^{-7000k} = \frac{1000}{200} = 5.$
+$\displaystyle 9 e^{-7000k} = 4
+\quad\Longrightarrow\quad
+e^{-7000k} = \frac{4}{9}.$
+Taking the seventh root gives
+$\displaystyle e^{-1000k} = \left(\frac{4}{9}\right)^{1/7}. $
+
+We want the population after $10$ hours, that is $P(10)$. From above, we have,
+$\displaystyle P(10) = \frac{1000}{1 + 9 e^{-10000k}}.$
+
+From above, we have , $\displaystyle e^{-10000k} = \left(e^{-1000k}\right)^{10}
+= \left(\frac{4}{9}\right)^{10/7}.$
+Therefore,$\displaystyle P(10) = \frac{1000}{1 + 9 \left(\frac{4}{9}\right)^{10/7}}.$
+Now evaluate numerically. Compute
+$\displaystyle \left(\frac{4}{9}\right)^{10/7}
+= (0.4444)^{1.42857\ldots}
+\approx 0.3139.$ Then $9 \times 0.3139 \approx 2.8251,$
+$1 + 2.8251 = 3.8251,$
+$\displaystyle P(10) = \frac{1000}{3.8251} \approx 261.4.$
+Thus, the estimated population after $10$ hours is $P(10) \approx 261$ strands.
+
+ &\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+k = np.log(9 / 4) / 7000
+
+def bacteria_growth(t, y):
+    return [k * y[0] * (1000 - y[0])]
+
+sol = solve_ivp(bacteria_growth, [0, 10], [100], t_eval=[10])
+resultado = round(sol.y[0][0])
+print(resultado)
+\end{verbatim}& 261 \\ \hline 
+ 61           & A new product is test‑marketed by giving it free to 1000 people in a city of 1,000,000 inhabitants (constant population). The rate of adoption is proportional to the product of the number of people who have the product and the number who do not. If 3000 people have adopted it after 4 weeks, how many people will have adopted it after 8 weeks?
+
+
+              &Let $P(t)$ denote the number of people who have adopted the product after $t$ weeks.
+
+The city has a constant population of $1,000,000$ people. Therefore, if $P(t)$ people have adopted the product, then the number of people who have not adopted it is $1,000,000-P(t).$
+According to the problem, the rate of adoption is proportional to the product of the number of people who have adopted the product and the number who have not. Therefore, the population satisfies the logistic differential equation $\frac{dP}{dt}=kP(1,000,000-P),$ where $k>0$ is a constant of proportionality.
+Initially, the product is given to $1000$ people. Thus,  $P(0)=1000.$
+The general solution of the logistic differential equation is
+$P(t)=\frac{1,000,000}{1+Ce^{-1,000,000kt}}.$
+Using the initial condition $P(0)=1000$, $1000=\frac{1,000,000}{1+C}.$
+Therefore, $1+C=1000,$so$C=999.$
+Hence, $P(t)=\frac{1,000,000}{1+999e^{-1,000,000kt}}.$
+We are told that $3000$ people have adopted the product after $4$ weeks. Thus,  $P(4)=3000.$
+Substituting $t=4$, $3000=\frac{1,000,000}{1+999e^{-4,000,000k}}.$
+Therefore, $1+999e^{-4,000,000k}
+=\frac{1,000,000}{3000}
+=\frac{1000}{3}.$Thus, $999e^{-4,000,000k}
+=\frac{1000}{3}-1
+=\frac{997}{3}.$
+Hence, $e^{-4,000,000k}
+=\frac{997}{2997}.$
+We now want to determine the number of adopters after $8$ weeks.
+From the population model, $P(8)=\frac{1,000,000}{1+999e^{-8,000,000k}}.$
+Since$e^{-8,000,000k}
+=\left(e^{-4,000,000k}\right)^2,$
+we have $e^{-8,000,000k}
+=\left(\frac{997}{2997}\right)^2.$
+Therefore, 
+$P(8)=\frac{1,000,000}
+{1+999\left(\frac{997}{2997}\right)^2}.$
+Evaluating,
+$P(8)\approx8964.11.$
+Hence, the estimated number of people who will have adopted the product after $8$ weeks is 8964 people.
+
+ &\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+k = np.log((997 / 2997) ** (-1)) / 4000000
+
+def product_adoption(t, y):
+    return [k * y[0] * (1000000 - y[0])]
+
+sol = solve_ivp(product_adoption, [0, 8], [1000], t_eval=[8])
+resultado = round(sol.y[0][0])
+print(resultado)
+\end{verbatim}& 8964 \\ \hline 
+ 62           & A body of mass 1 slug is dropped with an initial velocity of 1 ft/sec and encounters a force due to air resistance given exactly by -8v2. Find the velocity at after 15 seconds.
+
+
+              &  Let $v(t)$ denote the velocity of the body (in ft/sec) at time $t$ (seconds).
+The body is acted upon by two forces: its weight and the force due to air resistance. According to Newton's Second Law,
+$m\frac{dv}{dt}=mg-8v^2,$
+where $m=1$ slug and $g=32$ ft/s$^2$.
+Substituting these values,
+$\frac{dv}{dt}=32-8v^2.$
+Therefore,$\frac{dv}{dt}=8(4-v^2).$
+The initial velocity is $1$ ft/sec, so$v(0)=1.$
+We separate the variables:
+$\frac{dv}{4-v^2}=8\,dt.$
+Using partial fractions,
+$\frac{1}{4-v^2}
+=\frac{1}{(2-v)(2+v)}
+=\frac{1}{4}\left(\frac{1}{2-v}+\frac{1}{2+v}\right).$
+Thus, $\int\frac{dv}{4-v^2}
+=\frac{1}{4}\int\left(\frac{1}{2-v}+\frac{1}{2+v}\right)dv.$
+Integrating,
+$\frac{1}{4}\left[-\ln|2-v|+\ln|2+v|\right]
+=8t+C.$
+Therefore,
+$\frac{1}{4}\ln\left|\frac{2+v}{2-v}\right|
+=8t+C.$
+Multiplying by $4$,
+$\ln\left|\frac{2+v}{2-v}\right|
+=32t+C_1.$
+Exponentiating both sides,
+$\frac{2+v}{2-v}=Ce^{32t}.$
+Using the initial condition $v(0)=1$, $\frac{2+1}{2-1}=C,$ so$C=3.$
+
+Hence,$\frac{2+v}{2-v}=3e^{32t}.$
+Solving for $v$,$2+v=3e^{32t}(2-v),$
+$2+v=6e^{32t}-3ve^{32t},$
+$v(1+3e^{32t})=6e^{32t}-2.$
+Therefore,$v(t)=\frac{6e^{32t}-2}{1+3e^{32t}}.$
+An equivalent and more convenient form is$v(t)=2\frac{3e^{32t}-1}{3e^{32t}+1}.$
+We now find the velocity after $15$ seconds:$v(15)=2\frac{3e^{480}-1}{3e^{480}+1}.$Since $e^{480}$ is extremely large,
+$v(15)\approx2\text{ ft/sec}$
+or rather  $v(15)=2-\frac{4}{3e^{480}+1},$
+and the difference from $2$ ft/sec is negligible.
+Hence, the velocity of the body after $15$ seconds is $v(15)\approx2$ ft/sec.
+
+ &\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+def v_model(t, v):
+    return [32 - 8 * v[0]**2]
+
+sol = solve_ivp(v_model, [0, 15], [1], t_eval=[15])
+resultado = round(sol.y[0][0], 0)
+print(resultado)
+\end{verbatim}& 2 \\ \hline 
+ 63           & A RL circuit has a resistance of 10 ohms, an inductance of 1.5 henries, an applied emf of 9 volts, and an initial current of 6 amperes. Find the current in the circuit after 7 seconds?
+
+
+              &Let $i(t)$ denote the current in the RL circuit (in amperes) at time $t$ (seconds).
+
+Using Kirchhoff's voltage law, the   differential equation is $L\frac{di}{dt}+Ri=E,$
+where $L=1,5$ henries, $R=10$ ohms, and the applied emf is $E=9$ volts.
+Therefore, $1,5\frac{di}{dt}+10i=9.$
+Dividing by $1,5$ we have,
+$\frac{di}{dt}+\frac{20}{3}i=6.$
+The initial current is $6$ amperes, so $i(0)=6.$
+Solving the differential equation using the integrating factor, we have $\mu(t)=e^{\int\frac{20}{3}\,dt}=e^{20t/3}.$
+Multiplying both sides by the integrating factor, 
+$e^{20t/3}\frac{di}{dt}
++\frac{20}{3}e^{20t/3}i
+=6e^{20t/3},$
+which can be written as 
+$\frac{d}{dt}\left(e^{20t/3}i\right)
+=6e^{20t/3}.$
+Integrating both sides, $e^{20t/3}i
+=\frac{9}{10}e^{20t/3}+C.$
+Hence, $i(t)=\frac{9}{10}+Ce^{-20t/3}.$
+Using the initial condition $i(0)=6$, $6=\frac{9}{10}+C,$ so $ C=\frac{51}{10}.$
+
+Therefore, the current is
+$i(t)=\frac{9}{10}+\frac{51}{10}e^{-20t/3}.$
+We now find the current after $7$ seconds which gives $i(7)=\frac{9}{10}+\frac{51}{10}e^{-140/3}.$
+Since $e^{-140/3}$ is extremely small, the current in the circuit after $7$ seconds is $i(7)=\frac{9}{10}+\frac{51}{10}e^{-140/3}\approx0.900$ A.
+
+ &\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+def i_model(t, i):
+    return [6 - (20/3) * i[0]]
+
+sol = solve_ivp(i_model, [0, 7], [6], t_eval=[7])
+resultado = round(sol.y[0][0], 3)
+print(resultado)
+\end{verbatim}& 0.9 \\ \hline 
+ 64           & An RC circuit has an emf of $300 \cos(2t)$ volts, a resistance of $150$ ohms, a capacitance of $\frac{1}{6} \times 10^{-2}$ farad (i.e. $\frac{1}{600}$ F), and an initial charge on the capacitor of $5$ coulombs. 
+
+Find the charge on the capacitor after $60$ seconds.
+
+
+              &Let $q(t)$ denote the charge on the capacitor (in coulombs) at time $t$ (seconds).
+
+Using Kirchhoff's voltage law, the differential equation is 
+$R\frac{dq}{dt}+\frac{1}{C}q=E(t),$
+where $R=150$ ohms, the capacitance is $C=\frac{1}{6}\times10^{-2}=\frac{1}{600}\text{ farad},$ and the applied emf is
+$E(t)=300\cos(2t)$ volts.
+The initial charge on the capacitor is $q(0)=5.$ Substituting the given values into the differential equation,
+$150\frac{dq}{dt}+600q=300\cos(2t).$
+Dividing by $150$ we have, $\frac{dq}{dt}+4q=2\cos(2t).$
+Solving the differential equation using the integrating factor,
+$\mu(t)=e^{\int4\,dt}=e^{4t}.$
+Multiplying both sides by the integrating factor,
+$e^{4t}\frac{dq}{dt}+4e^{4t}q
+=2e^{4t}\cos(2t),$
+
+which can be written as
+$\frac{d}{dt}\left(e^{4t}q\right)
+=2e^{4t}\cos(2t).$
+Integrating both sides,
+$e^{4t}q
+=\int2e^{4t}\cos(2t)\,dt+C.$
+Using the formula $\int e^{at}\cos(bt)\,dt
+=\frac{e^{at}}{a^2+b^2}
+\left(a\cos(bt)+b\sin(bt)\right),$
+we obtain $e^{4t}q
+=e^{4t}\left(\frac{2}{5}\cos(2t)+\frac{1}{5}\sin(2t)\right)+C.$
+Hence, $q(t)=\frac{2}{5}\cos(2t)+\frac{1}{5}\sin(2t)+Ce^{-4t}.$
+Using the initial condition $q(0)=5$, $5=\frac{2}{5}+C,$ so $C=\frac{23}{5}.$
+
+Therefore, $q(t)=\frac{2}{5}\cos(2t)+\frac{1}{5}\sin(2t)
++\frac{23}{5}e^{-4t}.$
+We now find the charge after $60$ seconds. Substituting $t=60$,
+$q(60)=\frac{2}{5}\cos(120)+\frac{1}{5}\sin(120)
++\frac{23}{5}e^{-240}.$
+Since $e^{-240}$ is extremely small,
+$q(60)\approx\frac{2}{5}\cos(120)+\frac{1}{5}\sin(120).$
+Using $\cos(120)\approx0.814181$
+and $\sin(120)\approx0.580611,$
+we obtain $q(60)\approx\frac{2}{5}(0.814181)
++\frac{1}{5}(0.580611).$
+Thus,$q(60)\approx0.325672+0.116122$
+$q(60)\approx0.441794$ C.
+
+Hence, the charge on the capacitor after $60$ seconds is 0.442 coulombs
+
+& \begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def q_model(t, q):
+    return [2 * np.cos(2*t) - 4 * q[0]]
+
+sol = solve_ivp(q_model, [0, 60], [5], t_eval=[60])
+resultado = round(sol.y[0][0], 3)
+print(resultado)
+\end{verbatim}& 0.442 \\ \hline 
+ 65           & A RC circuit has an emf of 10 sin t volts, a resistance of 100 ohms, a capacitance of 0.005 farad, and no initial charge on the capacitor. Find the charge on the capacitor after 120 seconds?
+
+
+              &Let $q(t)$ denote the charge on the capacitor (in coulombs) at time $t$ (seconds).
+
+For an RC circuit, using Kirchhoff's voltage law gives the differential equation
+$R\frac{dq}{dt}+\frac{1}{C}q=E(t),$
+where $R=100$ ohms, $C=0.005$ farad, and the applied emf is
+$E(t)=10\sin t.$
+The initial charge on the capacitor is zero, so $q(0)=0.$
+
+Substituting the given values into the differential equation,
+$100\frac{dq}{dt}+\frac{1}{0.005}q=10\sin t.$
+Since$\frac{1}{0.005}=200,$ we obtain $100\frac{dq}{dt}+200q=10\sin t.$
+
+Dividing by $100$, $\frac{dq}{dt}+2q=\frac{1}{10}\sin t.$
+Solving the differential equation using the integrating factor,
+$\mu(t)=e^{\int2\,dt}=e^{2t}.$
+Multiplying both sides by the integrating factor,
+$e^{2t}\frac{dq}{dt}+2e^{2t}q
+=\frac{1}{10}e^{2t}\sin t,$
+which can be written as $\frac{d}{dt}\left(e^{2t}q\right)
+=\frac{1}{10}e^{2t}\sin t.$
+
+Integrating both sides,
+$e^{2t}q
+=\frac{1}{10}\int e^{2t}\sin t\,dt+C.$ Using the formula $\int e^{at}\sin(bt)\,dt
+=\frac{e^{at}}{a^2+b^2}
+\left(a\sin(bt)-b\cos(bt)\right),$
+we obtain $e^{2t}q
+=\frac{e^{2t}}{50}\left(2\sin t-\cos t\right)+C.$
+Therefore, $q(t)=\frac{1}{25}\sin t-\frac{1}{50}\cos t+Ce^{-2t}.$
+Using the initial condition $q(0)=0$,
+$0 =0-\frac{1}{50}+C,$
+
+Hence, the charge is
+$q(t)=\frac{1}{25}\sin t-\frac{1}{50}\cos t+\frac{1}{50}e^{-2t}.$
+We now find the charge after $120$ seconds: $q(120)=\frac{1}{25}\sin(120)-\frac{1}{50}\cos(120)+\frac{1}{50}e^{-240}.$ Since $e^{-240}$ is extremely small,
+
+$q(120)\approx\frac{1}{25}\sin(120)-\frac{1}{50}\cos(120).$
+Using $\sin(120)\approx0.580611$
+and $\cos(120)\approx0.814181,$
+we obtain $q(120)\approx\frac{1}{25}(0.580611)
+-\frac{1}{50}(0.814181).$
+
+Thus, $q(120)\approx0.0232244-0.0162836,$
+so$q(120)\approx0.0069408 $ C.
+
+Hence, the charge on the capacitor after $120$ seconds is 0.00694 coulombs
+
+&\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def q_model(t, q):
+    return [0.1 * np.sin(t) - 2 * q[0]]
+
+sol = solve_ivp(q_model, [0, 120], [0], t_eval=[120])
+resultado = round(sol.y[0][0], 5)
+print(resultado)
+\end{verbatim} &0.00694 \\ \hline 
+ 66           & It is known that the population of a community in Mungo, Huambo Province, Angola, grows at an instantaneous rate proportional to the number of individuals present at any given time. If the population doubles in 5 years, when will the population quadruple?&et $P(t)$ denote the population at time $t$, measured in years.
+
+Since the growth rate is proportional to the number of people present, the differential equation is
+
+$\frac{dP}{dt}=kP,$
+
+where $k>0$ is the constant of proportionality. The general solution is $P(t)=P_0e^{kt},$
+
+where $P_0$ is the initial population.
+
+We know that the population doubles in 5 years. Therefore, $P(5)=2P_0.$
+
+Substituting into the solution,
+$2P_0=P_0e^{5k}.$
+
+Dividing by $P_0$, $2=e^{5k}.$
+
+Taking the natural logarithm, $\ln 2=5k,$
+
+therefore, $k=\frac{\ln 2}{5}.$
+
+We want to determine when the population will quadruple, that is,
+
+$P(t)=4P_0.$
+
+Therefore, $4P_0=P_0e^{kt},$
+
+and hence, $4=e^{kt}.$
+
+Taking the natural logarithm, $\ln4=kt.$
+
+Substituting $k=\frac{\ln2}{5}$,
+
+$\ln4=\frac{\ln2}{5}t.$
+
+Since $\ln4=2\ln2$,
+
+$2\ln2=\frac{\ln2}{5}t$
+
+or rather, $2=\frac{t}{5}.$
+
+Therefore, $t=10$ years.
+
+Hence, the population will quadruple in 10 years
+
+
+
+ &\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+k = np.log(2) / 5
+
+def P_model(t, P):
+    return [k * P[0]]
+
+def quadruple(t, P):
+    return P[0] - 4
+quadruple.terminal = True
+
+sol = solve_ivp(P_model, [0, 50], [1], events=quadruple)
+resultado = round(sol.t_events[0][0], 0)
+print(resultado)
+\end{verbatim}& 10 \\ \hline 
+ 67           & In a closed room, where the ambient temperature remains constant at 
+$28.7^\circ\mathrm{C}$, a certain amount of coffee is placed in a cup 
+at an initial temperature of $84^\circ\mathrm{C}$. After 5 minutes, the coffee reaches $76.2^\circ\mathrm{C}$. Determine the temperature of the coffee after 10 minutes.
+
+
+              &Let $T(t)$ denote the temperature of the coffee (in ${}^\circ\mathrm{C}$) at time $t$ (minutes).
+
+According to Newton's Law of Cooling, the rate of change of the temperature is proportional to the difference between the temperature of the coffee and the ambient temperature. Since the ambient temperature is constant at $28.7^\circ\mathrm{C}$, we have the following differential equation
+$\frac{dT}{dt}=k(28.7-T),$ where $k>0$ is a constant of proportionality. Rearranging we have, 
+$\frac{dT}{dt}+kT=28.7k.$
+
+The general solution is $T(t)=28.7+Ce^{-kt}.$
+The initial temperature of the coffee is $84^\circ\mathrm{C}$, so
+$T(0)=84.$ Therefore, $84=28.7+C,$
+which gives $C=55.3.$
+Hence, $T(t)=28.7+55.3e^{-kt}.$
+We are told that after $5$ minutes, the temperature is $76.2^\circ\mathrm{C}$. Thus, $T(5)=76.2.$ Substituting,
+$76.2=28.7+55.3e^{-5k}.$
+Therefore, $47.5=55.3e^{-5k}.$
+Thus, $e^{-5k}=\frac{47.5}{55.3}.$
+Taking the natural logarithm,
+$-5k=\ln\left(\frac{47.5}{55.3}\right),$ so $k=-\frac{1}{5}\ln\left(\frac{47.5}{55.3}\right).$ We want to find the temperature after $10$ minutes. From the equation, $T(10)=28.7+55.3e^{-10k}.$ 
+Since $e^{-10k}=\left(e^{-5k}\right)^2,$
+we have $e^{-10k}=\left(\frac{47.5}{55.3}\right)^2.$
+Therefore, $T(10)=28.7+55.3\left(\frac{47.5}{55.3}\right)^2.$
+Simplifying, $T(10)=28.7+\frac{47.5^2}{55.3}.$
+Since $47.5^2=2256.25,$ we obtain
+$T(10)=28.7+\frac{2256.25}{55.3}.$
+
+Thus, $T(10)\approx28.7+40.799.$
+
+Therefore, $T(10)\approx69.50^\circ\mathrm{C}.$
+
+Hence, the temperature of the coffee after $10$ minutes is
+
+$\approx69.5^\circ\mathrm{C}.$
+
+ &\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+k = -(1/5) * np.log(47.5/55.3)
+
+def T_model(t, T):
+    return [k * (28.7 - T[0])]
+
+sol = solve_ivp(T_model, [0, 10], [84], t_eval=[10])
+resultado = round(sol.y[0][0], 1)
+print(resultado)
+\end{verbatim} & 69.5 \\ \hline 
+ 68           & A 1 kg steel ball is dropped from a height of 1000 m with no initial velocity. During its fall, the ball experiences an air resistance force proportional to its velocity, with the resistance force given by $-0.25v$ N, where $v$ is the velocity of the ball in m/s. Find the limiting velocity of the ball.
+
+
+              &Let $v(t)$ denote the velocity of the steel ball in m/s at time $t$ seconds.
+
+The ball is acted upon by two forces: its weight and the force due to air resistance.
+
+According to Newton's Second Law,
+we have the differential equation 
+$m\frac{dv}{dt}=mg-0.25v,$
+where $m=1$ kg and $g=9.8\text{ m/s}^2.$
+
+Substituting these values,$\frac{dv}{dt}=9.8-0.25v.$
+Therefore,
+$\frac{dv}{dt}+0.25v=9.8.$
+The limiting velocity is reached when the acceleration approaches zero. Thus, $\frac{dv}{dt}=0.$
+Therefore, $0+0.25v_{\mathrm{lim}}=9.8.$
+Solving for the limiting velocity,
+$v_{\mathrm{lim}}=\frac{9.8}{0.25}.$
+Hence,
+$v_{\mathrm{lim}}=39.2\text{ m/s}.$
+Therefore, the finite limiting velocity of the ball is 39.2 m/s.
+&\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def falling_ball(t, y):
+    return [9.8 - 0.25 * y[0]]
+
+sol = solve_ivp(falling_ball, [0, 100], [0], t_eval=[100])
+resultado = round(sol.y[0][0], 2)
+print(resultado)
+\end{verbatim} & 39.2 \\ \hline 
+ 69           & An RL circuit has a source voltage of $3\sin(2t)$ volts, a resistance of $10$ ohms, an inductance of $0.5$ henry, and an initial current of $6$ amperes. Determine the current in the circuit after $10$ seconds.
+
+
+              &Let $i(t)$ denote the current in the RL circuit (in amperes) at time $t$ (seconds).
+
+For an RL circuit, Kirchhoff's voltage law gives the differential equation
+
+$L\frac{di}{dt}+Ri=E(t),$
+
+where $L=0.5$ henry, $R=10$ ohms, and the source voltage is
+
+$E(t)=3\sin(2t)$ volts.
+
+Therefore, $0.5\frac{di}{dt}+10i=3\sin(2t).$
+
+Dividing by $0.5$, $\frac{di}{dt}+20i=6\sin(2t).$
+
+The initial current is $6$ amperes, so $i(0)=6.$
+
+Solving the differential equation using the integrating factor,
+$\mu(t)=e^{\int20\,dt}=e^{20t}.$
+
+Multiplying both sides by the integrating factor,
+$e^{20t}\frac{di}{dt}+20e^{20t}i
+=6e^{20t}\sin(2t),$
+which can be written as $\frac{d}{dt}\left(e^{20t}i\right)
+=6e^{20t}\sin(2t).$ Integrating both sides,
+$e^{20t}i=6\int e^{20t}\sin(2t)\,dt+C.$
+
+Using the formula $\int e^{at}\sin(bt)\,dt
+=\frac{e^{at}}{a^2+b^2}
+\left(a\sin(bt)-b\cos(bt)\right),$ we obtain
+$e^{20t}i=\frac{6e^{20t}}{404}
+\left(20\sin(2t)-2\cos(2t)\right)+C.$
+Therefore, $i(t)=\frac{3}{101}\left(10\sin(2t)-\cos(2t)\right)+Ce^{-20t}.$
+Using the initial condition $i(0)=6$, $6=-\frac{3}{101}+C.$
+Thus, $C=6+\frac{3}{101}=\frac{609}{101}.$
+Hence, $i(t)=\frac{30}{101}\sin(2t)-\frac{3}{101}\cos(2t)
++\frac{609}{101}e^{-20t}.$
+We now find the current after $10$ seconds:
+$i(10)=\frac{30}{101}\sin(20)
+-\frac{3}{101}\cos(20)
++\frac{609}{101}e^{-200}.$
+Since $e^{-200}$ is extremely small,$i(10)\approx\frac{30}{101}\sin(20)
+-\frac{3}{101}\cos(20).$
+Using$\sin(20)\approx0.912945$ and $\cos(20)\approx0.408082,$
+we obtain $i(10)\approx\frac{30}{101}(0.912945)
+-\frac{3}{101}(0.408082).$ Thus, $i(10)\approx0.270588-0.012121.$
+Therefore, $i(10)\approx0.25847$ A.
+Hence, the current in the circuit after $10$ seconds is 0.258 Amperes
+
+
+&\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def i_model(t, i):
+    return [6 * np.sin(2*t) - 20 * i[0]]
+
+sol = solve_ivp(i_model, [0, 10], [6], t_eval=[10])
+resultado = round(sol.y[0][0], 3)
+print(resultado)
+\end{verbatim} & 0.258 \\ \hline 
+70  &A tank contains 1000 L of salt water with 15 kg of dissolved salt. Pure water enters the tank at a rate of 10 L/min. The solution is kept well-mixed and drains from the tank at the same rate. Calculate how much salt remains in the tank after 20 minutes. &
+Let $S(t)$ be the amount of salt, in kilograms, in the tank at time $t$, in minutes. Since the inflow and outflow rates are equal, the volume in the tank remains constant at 1000 L.
+
+The inflow contains no salt. The concentration of salt at time $t$ is
+\[
+\frac{S(t)}{1000}\ {\rm kg/L}.
+\]
+
+Therefore, the outflow rate of salt is
+\[
+10\left(\frac{S(t)}{1000}\right)
+=\frac{S(t)}{100}\ {\rm kg/min}.
+\]
+
+Thus,
+\[
+\frac{dS}{dt}=-\frac{1}{100}S.
+\]
+
+Separating variables,
+\[
+\frac{dS}{S}=-\frac{1}{100}\,dt.
+\]
+
+Integrating,
+\[
+\ln|S|=-\frac{t}{100}+C,
+\]
+so
+\[
+S(t)=Ce^{-t/100}.
+\]
+
+Using $S(0)=15$,
+\[
+C=15.
+\]
+
+Hence,
+\[
+S(t)=15e^{-t/100}.
+\]
+
+At $t=20$,
+\[
+S(20)=15e^{-0.2}\approx15(0.8187)
+\approx12.28\ {\rm kg}.
+\]
+
+Therefore, approximately
+12.3 kg
+
+of salt remains after 20 minutes.
+&
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+def salt_mixing(t, S):
+    return [-S[0] / 100]
+
+sol = solve_ivp(salt_mixing, [0, 20], [15],
+                t_eval=[20])
+resultado = round(sol.y[0][0], 1)
+print(resultado)
+\end{verbatim}
+&
+12.3 \\
+\hline
+
+71 &
+A resistor $R=10\Omega$ and an inductor $L=2$H are connected in series with a DC voltage source of 20 Volts. If the circuit is switched on at $t=0$, find the initial current $I(0)$. &
+Using Kirchhoff's Voltage Law,
+\[
+L\frac{dI(t)}{dt}+RI(t)=V.
+\]
+
+Substituting $V=20$, $R=10$, and $L=2$,
+\[
+2\frac{dI(t)}{dt}+10I(t)=20,
+\]
+or
+\[
+\frac{dI(t)}{dt}+5I(t)=10.
+\]
+
+Solving using an integrating factor,
+\[
+I(t)=2+Ce^{-5t}.
+\]
+
+Using $I(0)=0$,
+\[
+0=2+C
+\Rightarrow C=-2.
+\]
+
+Thus,
+\[
+I(t)=2-2e^{-5t}.
+\]
+
+Therefore,
+\[
+I(0)=0\ {\rm A}.
+\]
+&
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def rl_circuit(t, I):
+    return [(20 - 10 * I[0]) / 2]
+
+sol = solve_ivp(rl_circuit, [0, 1], [0], t_eval=[0])
+resultado = round(sol.y[0][0], 0)
+print(resultado)
+\end{verbatim}
+&
+0 \\
+\hline
+
+72 &
+A $5\mu{\rm F}$ capacitor is charged through a $10{\rm k}\Omega$ resistor from a $12$V battery. Calculate how long it will take for the voltage across the capacitor to reach $8$V. &
+For an RC charging circuit,
+\[
+V_0=RC\frac{dV_C(t)}{dt}+V_C(t).
+\]
+
+Therefore,
+\[
+\frac{dV_C(t)}{dt}
+=\frac{V_0-V_C(t)}{RC}.
+\]
+
+Separating variables,
+\[
+\frac{dV_C(t)}{V_0-V_C(t)}
+=\frac{dt}{RC}.
+\]
+
+Integrating,
+\[
+-\ln|V_0-V_C(t)|
+=\frac{t}{RC}+C_1.
+\]
+
+Using $V_C(0)=0$,
+\[
+V_C(t)=V_0\left(1-e^{-t/(RC)}\right).
+\]
+
+For $V_C(t)=8$ V,
+\[
+8=12\left(1-e^{-t/(RC)}\right).
+\]
+
+Thus,
+\[
+e^{-t/(RC)}=\frac{1}{3},
+\]
+and
+\[
+t=-RC\ln\left(\frac{1}{3}\right).
+\]
+
+Since
+\[
+R=10^4\Omega,
+\qquad
+C=5\times10^{-6}{\rm F},
+\]
+we obtain
+\[
+t=-10^4(5\times10^{-6})
+\ln\left(\frac{1}{3}\right)
+\approx0.0549\ {\rm s}.
+\]
+
+Therefore,
+\[
+\boxed{t\approx0.0549\ {\rm s}}.
+\]
+&
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+R = 10e3
+C = 5e-6
+
+def rc_charging(t, V):
+    return [(12 - V[0]) / (R * C)]
+
+t_final = -R * C * np.log(1 / 3)
+
+sol = solve_ivp(rc_charging, [0, t_final], [0],
+                t_eval=[t_final])
+resultado = round(t_final, 4)
+print(resultado)
+\end{verbatim}
+&
+0.0549 \\
+\hline
+
+73 &
+An object is removed from an oven at $200^\circ{\rm C}$ and left to cool in a room where the ambient temperature is $25^\circ{\rm C}$. The rate of cooling is proportional to the difference between the object's temperature and the room temperature. If after 10 minutes the temperature is $150^\circ{\rm C}$, find the temperature after 20 minutes. &
+Let $T(t)$ represent the temperature of the object. By Newton's Law of Cooling,
+\[
+\frac{dT}{dt}=-k(T-25).
+\]
+
+Solving,
+\[
+T(t)-25=Ae^{-kt}.
+\]
+
+Using $T(0)=200$,
+\[
+T(t)=25+175e^{-kt}.
+\]
+
+Since $T(10)=150$,
+\[
+150=25+175e^{-10k},
+\]
+so
+\[
+\frac{125}{175}=e^{-10k}.
+\]
+
+Hence,
+\[
+k=-\frac{\ln(125/175)}{10}
+\approx0.0337.
+\]
+
+Therefore,
+\[
+T(20)=25+175e^{-0.0337(20)}
+\approx114.19^\circ{\rm C}.
+\]
+
+Thus,
+\[
+\boxed{T(20)\approx114.19^\circ{\rm C}}.
+\]
+&
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+def cooling(t, T):
+    return [-0.0337 * (T[0] - 25)]
+
+sol = solve_ivp(cooling, [0, 20], [200],
+                t_eval=[20])
+resultado = round(sol.y[0][0], 2)
+print(resultado)
+\end{verbatim}
+&
+114.19 \\
+\hline
+
+74 &
+A certain village in Angola had a population of 10,000 people. Due to unfavorable living conditions, the population decreases at a rate proportional to the current population. After 3 years, the population decreased to 8,000. Determine the time it will take for the population to reduce to 5,000. &
+Let $P(t)$ be the population at time $t$. Then
+\[
+\frac{dP}{dt}=-kP.
+\]
+
+The solution is
+\[
+P(t)=Ae^{-kt}.
+\]
+
+Since $P(0)=10,000$,
+\[
+P(t)=10,000e^{-kt}.
+\]
+
+Using $P(3)=8,000$,
+\[
+0.8=e^{-3k},
+\]
+so
+\[
+k=-\frac{\ln(0.8)}{3}
+\approx0.0744.
+\]
+
+Now set $P(t)=5,000$:
+\[
+5000=10000e^{-0.0744t}.
+\]
+
+Therefore,
+\[
+t=-\frac{\ln(0.5)}{0.0744}
+\approx9.31\ {\rm years}.
+\]
+
+Thus,
+\[
+\boxed{t\approx9.31\ {\rm years}}.
+\]
+&
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+k = -np.log(0.8) / 3
+t_final = -np.log(0.5) / k
+
+def population_decay(t, P):
+    return [-k * P[0]]
+
+sol = solve_ivp(population_decay,
+                [0, t_final], [10000],
+                t_eval=[t_final])
+resultado = round(t_final, 2)
+print(resultado)
+\end{verbatim}
+&
+9.31 \\
+\hline
+
+75 &
+Find the charge when $t=0.2$ in a series RC circuit where $R=10\Omega$, $C=4\times10^{-3}$F and $E=85\cos(150t)$V. Assume that when the switch is closed at $t=0$, the charge on the capacitor is $-0.05$C. &
+We have
+\[
+R\frac{dq(t)}{dt}+\frac{1}{C}q(t)=V(t).
+\]
+
+Substituting the given values,
+\[
+10\frac{dq}{dt}+250q=85\cos(150t),
+\]
+hence
+\[
+\frac{dq}{dt}+25q=8.5\cos(150t).
+\]
+
+Using the integrating factor $e^{25t}$,
+\[
+\frac{d}{dt}\left(e^{25t}q(t)\right)
+=8.5e^{25t}\cos(150t).
+\]
+
+Using
+\[
+\int e^{mt}\cos(nt)\,dt
+=
+\frac{e^{mt}}{m^2+n^2}
+\left(m\cos(nt)+n\sin(nt)\right),
+\]
+we obtain
+\[
+q(t)=0.0092\cos(150t)
++0.055\sin(150t)
++Ke^{-25t}.
+\]
+
+Using $q(0)=-0.05$,
+\[
+K=-0.0592.
+\]
+
+Therefore,
+\[
+q(t)=0.0092\cos(150t)
++0.055\sin(150t)
+-0.0592e^{-25t}.
+\]
+
+At $t=0.2$,
+\[
+q(0.2)
+\approx-0.0529\ {\rm C}.
+\]
+
+Thus,
+\[
+\boxed{q(0.2)\approx-0.0529\ {\rm C}}.
+\]
+&
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def rc_circuit(t, q):
+    return [8.5 * np.cos(150 * t) - 25 * q[0]]
+
+sol = solve_ivp(rc_circuit, [0, 0.2], [-0.05],
+                t_eval=[0.2])
+resultado = round(sol.y[0][0], 4)
+print(resultado)
+\end{verbatim}
+&
+-0.0529 \\
+\hline
+
+76 &
+A resistor $R=12\Omega$ and an inductor $L=4$H are connected in series with a voltage source $E=60\sin(30t)$V. If the circuit is switched on at $t=0$, find the current $I(t)$ when $t=3$. &
+Using Kirchhoff's Voltage Law,
+\[
+L\frac{dI}{dt}+RI=V.
+\]
+
+Thus,
+\[
+4\frac{dI}{dt}+12I=60\sin(30t),
+\]
+or
+\[
+\frac{dI}{dt}+3I=15\sin(30t).
+\]
+
+Solving using an integrating factor gives
+\[
+I(t)=\frac{5}{101}
+\left(\sin(30t)-10\cos(30t)\right)
++Ke^{-3t}.
+\]
+
+Using $I(0)=0$,
+\[
+K=\frac{50}{101}.
+\]
+
+Hence,
+\[
+I(t)=\frac{5}{101}
+\left(\sin(30t)-10\cos(30t)\right)
++\frac{50}{101}e^{-3t}.
+\]
+
+At $t=3$,
+\[
+I(3)\approx0.266\ {\rm A}.
+\]
+
+Therefore,
+\[
+\boxed{I(3)\approx0.266\ {\rm A}}.
+\]
+&
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def rl_circuit(t, I):
+    return [15 * np.sin(30 * t) - 3 * I[0]]
+
+sol = solve_ivp(rl_circuit, [0, 3], [0],
+                t_eval=[3])
+resultado = round(sol.y[0][0], 3)
+print(resultado)
+\end{verbatim}
+&
+0.266 \\
+\hline
+
+77 &
+A roast chicken is removed from the oven when its temperature reaches $185^\circ{\rm F}$ and is placed on a table where the temperature is $75^\circ{\rm F}$. If the temperature of the chicken is $150^\circ{\rm F}$ after half an hour, calculate the temperature after 45 minutes. &
+By Newton's Law of Cooling,
+\[
+\frac{dT}{dt}=-k(T-75).
+\]
+
+Using $T(0)=185$,
+\[
+T(t)=75+110e^{-kt}.
+\]
+
+Since $T(30)=150$,
+\[
+75=110e^{-30k},
+\]
+so
+\[
+k=-\frac{\ln(75/110)}{30}
+\approx0.01296.
+\]
+
+Therefore,
+\[
+T(45)=75+110e^{-0.01296(45)}
+\approx136.40^\circ{\rm F}.
+\]
+
+Thus,
+\[
+\boxed{T(45)\approx136.40^\circ{\rm F}}.
+\]
+&
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+def chicken_cooling(t, T):
+    return [-0.01296 * (T[0] - 75)]
+
+sol = solve_ivp(chicken_cooling, [0, 45], [185],
+                t_eval=[45])
+resultado = round(sol.y[0][0], 2)
+print(resultado)
+\end{verbatim}
+&
+136.40 \\
+\hline
+
+78 &
+Escherichia coli, a common bacteria found in the human intestine, divides into two cells every 20 minutes when placed in a nutrient-rich medium. The initial population of the culture is 60 cells. Calculate the time required for the population to reach 20,000 cells. &
+We have
+\[
+\frac{dP}{dt}=kP.
+\]
+
+Thus,
+\[
+P(t)=Ae^{kt}.
+\]
+
+Since $P(0)=60$,
+\[
+P(t)=60e^{kt}.
+\]
+
+The population doubles every 20 minutes, so
+\[
+P(20)=120.
+\]
+
+Therefore,
+\[
+120=60e^{20k}
+\Rightarrow
+k=\frac{\ln2}{20}
+\approx0.03466.
+\]
+
+Now,
+\[
+20000=60e^{0.03466t}.
+\]
+
+Hence,
+\[
+t=\frac{\ln(20000/60)}{0.03466}
+\approx167.63\ {\rm min}.
+\]
+
+Therefore,
+\[
+\boxed{t\approx167.63\ {\rm min}}.
+\]
+&
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+k = np.log(2) / 20
+t_final = np.log(20000 / 60) / k
+
+def bacteria_growth(t, P):
+    return [k * P[0]]
+
+sol = solve_ivp(bacteria_growth,
+                [0, t_final], [60],
+                t_eval=[t_final])
+resultado = round(t_final, 2)
+print(resultado)
+\end{verbatim}
+&
+167.63 \\
+\hline
+
+79 &
+Suppose an amount of 100,000 kwanzas is invested at an interest rate of 4 percent per year and the interest is calculated continuously. In what time will we have a total profit of 200,000 kwanzas? &
+We have
+\[
+\frac{dA}{dt}=kA.
+\]
+
+Therefore,
+\[
+\frac{dA}{A}=0.04\,dt,
+\]
+so
+\[
+\ln A=0.04t+C
+\]
+and
+\[
+A=Ce^{0.04t}.
+\]
+
+Since $A(0)=100000$,
+\[
+A(t)=100000e^{0.04t}.
+\]
+
+A total profit of 200,000 kwanzas means that the final amount is
+\[
+100000+200000=300000.
+\]
+
+Thus,
+\[
+300000=100000e^{0.04t},
+\]
+so
+\[
+t=\frac{\ln3}{0.04}
+\approx27.47\ {\rm years}.
+\]
+
+Therefore,
+\[
+\boxed{t\approx27.47\ {\rm years}}.
+\]
+&
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def investment_growth(t, A):
+    return [0.04 * A[0]]
+
+t_final = np.log(3) / 0.04
+
+sol = solve_ivp(investment_growth,
+                [0, t_final], [100000],
+                t_eval=[t_final])
+resultado = round(t_final, 2)
+print(resultado)
+\end{verbatim}
+&
+27.47 \\
+\hline
+
+80 &
+At time $t=0$, a tank contains 4 lb of salt dissolved in 100 gal of water. Suppose that brine containing 2 lb of salt per gallon enters the tank at a rate of 5 gal/min and the mixed solution is drained at the same rate. Find the amount of salt in the tank after 10 minutes. &
+Let $y(t)$ be the amount of salt, in pounds, after $t$ minutes. We have
+\[
+y(0)=4.
+\]
+
+The rate of salt entering is
+\[
+(2\ {\rm lb/gal})(5\ {\rm gal/min})
+=10\ {\rm lb/min}.
+\]
+
+Since the volume remains constant at 100 gal, the concentration at time $t$ is
+\[
+\frac{y(t)}{100}\ {\rm lb/gal}.
+\]
+
+Therefore, the rate of salt leaving is
+\[
+\frac{y(t)}{100}(5)
+=\frac{y(t)}{20}.
+\]
+
+Hence,
+\[
+\frac{dy}{dt}=10-\frac{y}{20},
+\]
+or
+\[
+\frac{dy}{dt}+\frac{y}{20}=10.
+\]
+
+The integrating factor is
+\[
+\mu(t)=e^{t/20}.
+\]
+
+Thus,
+\[
+\frac{d}{dt}
+\left(e^{t/20}y\right)
+=10e^{t/20}.
+\]
+
+Integrating,
+\[
+y(t)=200+Ce^{-t/20}.
+\]
+
+Using $y(0)=4$,
+\[
+C=-196.
+\]
+
+Therefore,
+\[
+y(t)=200-196e^{-t/20}.
+\]
+
+At $t=10$,
+\[
+y(10)=200-196e^{-10/20}
+\approx81.1\ {\rm lb}.
+\]
+
+Thus,
+\[
+\boxed{y(10)\approx81.1\ {\rm lb}}.
+\]
+&
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+def salt_mixing(t, y):
+    return [10 - y[0] / 20]
+
+sol = solve_ivp(salt_mixing, [0, 10], [4],
+                t_eval=[10])
+resultado = round(sol.y[0][0], 1)
+print(resultado)
+\end{verbatim}
+&
+81.1 \\
+\hline
+
+81 &
+A bacterial culture grows at a rate proportional to its size. Initially there are 1,000 bacteria, and after 2 hours there are 3,000. Find the number of bacteria after 5 hours. &
+\[
+\frac{dP}{dt}=kP
+\Rightarrow
+P(t)=P_0e^{kt}.
+\]
+
+Given
+\[
+P(0)=1000,\qquad P(2)=3000,
+\]
+we have
+\[
+3000=1000e^{2k}.
+\]
+
+Thus,
+\[
+k=\frac{\ln3}{2}\approx0.5493.
+\]
+
+Therefore,
+\[
+P(5)=1000e^{0.5493(5)}
+\approx15588.
+\]
+
+Hence,
+\[
+\boxed{P(5)\approx15588}.
+\]
+&
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+def bacteria_growth(t, P):
+    return [0.5493 * P[0]]
+
+sol = solve_ivp(bacteria_growth, [0, 5], [1000],
+                t_eval=[5])
+resultado = round(sol.y[0][0], 0)
+print(int(resultado))
+\end{verbatim}
+&
+15588 \\
+\hline
+
+82 &
+A tank contains $500$ L of brine with $25$ kg of salt. Pure water enters at $5$ L/min, and the mixture drains at $5$ L/min. Find the amount of salt remaining after 30 minutes. &
+\[
+\frac{dS}{dt}
+=-\frac{5S}{500}
+=-\frac{S}{100}.
+\]
+
+Therefore,
+\[
+S(t)=25e^{-t/100}.
+\]
+
+At $t=30$,
+\[
+S(30)=25e^{-0.3}
+\approx18.53\ {\rm kg}.
+\]
+
+Thus,
+\[
+\boxed{S(30)\approx18.53\ {\rm kg}}.
+\]
+&
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+def salt_mixing(t, S):
+    return [-S[0] / 100]
+
+sol = solve_ivp(salt_mixing, [0, 30], [25],
+                t_eval=[30])
+resultado = round(sol.y[0][0], 2)
+print(resultado)
+\end{verbatim}
+&
+18.53 \\
+\hline
+
+83 &
+A hot metal cools from $300^\circ{\rm F}$ to $250^\circ{\rm F}$ in 10 minutes, with room temperature $70^\circ{\rm F}$. Find the temperature after 40 minutes. &
+\[
+T(t)=70+230e^{-kt}.
+\]
+
+At $t=10$,
+\[
+250=70+230e^{-10k}.
+\]
+
+Thus,
+\[
+k=-\frac{1}{10}
+\ln\left(\frac{180}{230}\right)
+\approx0.0246.
+\]
+
+Therefore,
+\[
+T(40)
+=70+230e^{-0.0246(40)}
+\approx155.6^\circ{\rm F}.
+\]
+
+Thus,
+\[
+\boxed{T(40)\approx155.6^\circ{\rm F}}.
+\]
+&
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+def cooling(t, T):
+    return [-0.0246 * (T[0] - 70)]
+
+sol = solve_ivp(cooling, [0, 40], [300],
+                t_eval=[40])
+resultado = round(sol.y[0][0], 2)
+print(resultado)
+\end{verbatim}
+&
+155.6 \\
+\hline
+
+84 &
+A pizza cools from $400^\circ{\rm F}$ to $350^\circ{\rm F}$ in 5 minutes, with kitchen temperature $75^\circ{\rm F}$. Find the temperature after 20 minutes. &
+\[
+T(t)=75+325e^{-kt}.
+\]
+
+At $t=5$,
+\[
+350=75+325e^{-5k}.
+\]
+
+Thus,
+\[
+k=-\frac{1}{5}
+\ln\left(\frac{275}{325}\right)
+\approx0.0335.
+\]
+
+Therefore,
+\[
+T(20)=75+325e^{-0.0335(20)}
+\approx242.8^\circ{\rm F}.
+\]
+
+Thus,
+\[
+\boxed{T(20)\approx242.8^\circ{\rm F}}.
+\]
+&
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+def cooling(t, T):
+    return [-0.0335 * (T[0] - 75)]
+
+sol = solve_ivp(cooling, [0, 20], [400],
+                t_eval=[20])
+resultado = round(sol.y[0][0], 2)
+print(resultado)
+\end{verbatim}
+&
+242.8 \\
+\hline
+
+85 &
+An amount of 50,000 dollars is invested at 5 percent continuous interest per year. Find the time it will take to reach 150,000 dollars. &
+\[
+150000=50000e^{0.05t}.
+\]
+
+Therefore,
+\[
+t=\frac{\ln3}{0.05}
+\approx21.97\ {\rm years}.
+\]
+
+Thus,
+\[
+\boxed{t\approx21.97\ {\rm years}}.
+\]
+&
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def investment_growth(t, A):
+    return [0.05 * A[0]]
+
+t_final = np.log(3) / 0.05
+
+sol = solve_ivp(investment_growth,
+                [0, t_final], [50000],
+                t_eval=[t_final])
+resultado = round(t_final, 2)
+print(resultado)
+\end{verbatim}
+&
+21.97 \\
+\hline
+
+86 &
+A tank contains 100 L of water with 5 kg of salt. Brine containing $0.3$ kg/L enters at 2 L/min, while the mixture drains at the variable rate $Q_{\rm out}=0.1\sqrt{V}$ L/min, where $V$ is the current volume. Find the salt amount after 30 minutes. &
+The volume satisfies
+\[
+\frac{dV}{dt}
+=2-0.1\sqrt{V}.
+\]
+
+The salt balance is
+\[
+\frac{dS}{dt}
+=0.6-\frac{0.1S\sqrt{V}}{V}.
+\]
+
+This is a coupled system requiring numerical solution. At $t=30$ min,
+\[
+S(30)\approx28.14\ {\rm kg}.
+\]
+
+Thus,
+\[
+\boxed{S(30)\approx28.14\ {\rm kg}}.
+\]
+&
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def salt_system(t, y):
+    V = y[0]
+    S = y[1]
+    return [
+        2 - 0.1 * np.sqrt(V),
+        0.6 - 0.1 * S * np.sqrt(V) / V
+    ]
+
+sol = solve_ivp(salt_system, [0, 30], [100, 5],
+                t_eval=[30])
+resultado = round(sol.y[1][0], 2)
+print(resultado)
+\end{verbatim}
+&
+28.14 \\
+\hline
+
+87 &
+A population of insects decreases at a rate proportional to the current population. Initially, there are 5000 insects. After 5 days, the population is 4000. When will the population drop to 2500? &
+\[
+P(t)=5000e^{-kt}.
+\]
+
+Using $P(5)=4000$,
+\[
+4000=5000e^{-5k}.
+\]
+
+Therefore,
+\[
+e^{-5k}=0.8,
+\]
+so
+\[
+k=-\frac{\ln(0.8)}{5}
+\approx0.04463.
+\]
+
+For $P(t)=2500$,
+\[
+2500=5000e^{-0.04463t}.
+\]
+
+Thus,
+\[
+0.5=e^{-0.04463t},
+\]
+and
+\[
+t=-\frac{\ln(0.5)}{0.04463}
+\approx15.53\ {\rm days}.
+\]
+
+Therefore,
+\[
+\boxed{t\approx15.5\ {\rm days}}.
+\]
+&
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+k = -np.log(0.8) / 5
+t_final = -np.log(0.5) / k
+
+def population_decay(t, P):
+    return [-k * P[0]]
+
+sol = solve_ivp(population_decay,
+                [0, t_final], [5000],
+                t_eval=[t_final])
+resultado = round(t_final, 1)
+print(resultado)
+\end{verbatim}
+&
+15.5 \\
+\hline
+
+88 &
+A tank contains 200 liters of salt water with 30 grams of dissolved salt. Brine containing $2$ g/L of salt flows into the tank at $4$ L/min. The solution is kept well mixed and flows out at the same rate. Find the amount of salt in the tank after 10 minutes. &
+Let $S(t)$ be the amount of salt in grams. The rate in is
+\[
+4\times2=8\ {\rm g/min}.
+\]
+
+The rate out is
+\[
+\frac{S(t)}{200}\times4
+=\frac{S(t)}{50}.
+\]
+
+Therefore,
+\[
+\frac{dS}{dt}=8-\frac{S}{50}.
+\]
+
+Using the integrating factor $e^{t/50}$,
+\[
+\frac{d}{dt}
+\left(Se^{t/50}\right)
+=8e^{t/50}.
+\]
+
+Integrating,
+\[
+S(t)=400+Ce^{-t/50}.
+\]
+
+Since $S(0)=30$,
+\[
+C=-370.
+\]
+
+Thus,
+\[
+S(t)=400-370e^{-t/50}.
+\]
+
+At $t=10$,
+\[
+S(10)=400-370e^{-10/50}
+\approx91.3\ {\rm g}.
+\]
+
+Therefore,
+\[
+\boxed{S(10)\approx91.3\ {\rm g}}.
+\]
+&
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+def salt_mixing(t, S):
+    return [8 - S[0] / 50]
+
+sol = solve_ivp(salt_mixing, [0, 10], [30],
+                t_eval=[10])
+resultado = round(sol.y[0][0], 1)
+print(resultado)
+\end{verbatim}
+&
+91.3 \\
+\hline
+89 &
+A resistor $R=5\Omega$ and an inductor $L=1$H are connected in series with a DC voltage source of 10 Volts. If the circuit is switched on at $t=0$, find the initial current $I(0)$. &
+Using Kirchhoff's Voltage Law,
+\[
+L\frac{dI(t)}{dt}+RI(t)=V.
+\]
+
+Substituting $V=10$, $R=5$, and $L=1$,
+\[
+\frac{dI(t)}{dt}+5I(t)=10,
+\]
+
+Solving using an integrating factor,
+\[
+I(t)=2+Ce^{-5t}.
+\]
+
+Using $I(0)=0$,
+\[
+0=2+C
+\Rightarrow C=-2.
+\]
+
+Thus,
+\[
+I(t)=2-2e^{-5t}.
+\]
+
+Therefore,
+\[
+I(0)=0\ {\rm A}.
+\]
+&
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def rl_circuit(t, I):
+    return [10 - 5 * I[0]]
+
+sol = solve_ivp(rl_circuit, [0, 1], [0], t_eval=[0])
+resultado = round(sol.y[0][0], 0)
+print(resultado)
+\end{verbatim}
+&
+0 \\
+\hline
+
+90 &
+A population of insects decreases at a rate proportional to the current population. Initially, there are 5000 insects. After 5 days, the population is 4000. When will the population drop to 2500? &
+\[
+\frac{dP}{dt}=-kP
+\Rightarrow
+P(t)=P_0e^{-kt}.
+\]
+
+Given
+\[
+P(0)=5000,\qquad P(5)=4000,
+\]
+we have
+\[
+4000=5000e^{-5k}.
+\]
+
+Therefore,
+\[
+e^{-5k}=0.8,
+\]
+and
+\[
+k=-\frac{\ln(0.8)}{5}
+\approx0.0446.
+\]
+
+Now,
+\[
+2500=5000e^{-0.0446t}.
+\]
+
+Hence,
+\[
+0.5=e^{-0.0446t},
+\]
+so
+\[
+t=-\frac{\ln(0.5)}{0.0446}
+\approx15.5\ {\rm days}.
+\]
+
+Thus,
+\[
+\boxed{t\approx15.5\ {\rm days}}.
+\]
+&
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+k = -np.log(0.8) / 5
+t_final = -np.log(0.5) / k
+
+def population_decay(t, P):
+    return [-k * P[0]]
+
+sol = solve_ivp(population_decay,
+                [0, t_final], [5000],
+                t_eval=[t_final])
+resultado = round(t_final, 1)
+print(resultado)
+\end{verbatim}
+&
+15.5 \\
+\hline
+
+91 &
+In an RC circuit with $R=10{\rm k}\Omega$ and $C=2\mu{\rm F}$, the capacitor is initially uncharged. It is connected to a $12$V battery. What is the charge on the capacitor after $0.1$ seconds? &
+The charge on the capacitor is
+\[
+q(t)=CV\left(1-e^{-t/(RC)}\right).
+\]
+
+Given
+\[
+C=2\times10^{-6}{\rm F},
+\qquad
+R=10^4\Omega,
+\qquad
+V=12{\rm V},
+\]
+we have
+\[
+RC=0.02\ {\rm s}.
+\]
+
+Therefore,
+\[
+q(0.1)
+=
+2\times10^{-6}(12)
+\left(1-e^{-0.1/0.02}\right).
+\]
+
+Thus,
+\[
+q(0.1)
+=
+2.4\times10^{-5}(1-e^{-5})
+\approx2.398\times10^{-5}\ {\rm C}.
+\]
+
+Hence,
+\[
+\boxed{q(0.1)\approx2.398\times10^{-5}\ {\rm C}}.
+\]
+&
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+def rc_charging(t, q):
+    return [(12 - q[0] / (2e-6)) / 1e4]
+
+sol = solve_ivp(rc_charging, [0, 0.1], [0],
+                t_eval=[0.1])
+resultado = round(sol.y[0][0], 8)
+print(resultado)
+\end{verbatim}
+&
+0.00002398 \\
+\hline
+
+92 &
+A cup of coffee at $90^\circ{\rm C}$ is left in a room at $20^\circ{\rm C}$. After 10 minutes, the temperature is $70^\circ{\rm C}$. Use Newton's Law of Cooling to determine the temperature after 20 minutes. &
+Let $T(t)$ be the temperature. Then
+\[
+T(t)=20+70e^{-kt},
+\]
+because $T(0)=90$.
+
+At $t=10$,
+\[
+70=20+70e^{-10k}.
+\]
+
+Therefore,
+\[
+e^{-10k}=\frac{5}{7},
+\]
+so
+\[
+k=-\frac{\ln(5/7)}{10}
+\approx0.03365.
+\]
+
+At $t=20$,
+\[
+T(20)
+=20+70e^{-0.03365(20)}
+\approx55.71^\circ{\rm C}.
+\]
+
+Thus,
+\[
+\boxed{T(20)\approx55.71^\circ{\rm C}}.
+\]
+&
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+def coffee_cooling(t, T):
+    return [-0.03365 * (T[0] - 20)]
+
+sol = solve_ivp(coffee_cooling, [0, 20], [90],
+                t_eval=[20])
+resultado = round(sol.y[0][0], 2)
+print(resultado)
+\end{verbatim}
+&
+55.71 \\
+\hline
+
+93 &
+A radioactive substance decays at a rate proportional to the amount present. Initially, there are $100$ g. After 10 years, only $60$ g remain. Find the half-life of the substance. &
+\[
+A(t)=A_0e^{-kt}.
+\]
+
+Since
+\[
+60=100e^{-10k},
+\]
+we obtain
+\[
+e^{-10k}=0.6,
+\]
+and hence
+\[
+k=-\frac{\ln(0.6)}{10}
+\approx0.0511.
+\]
+
+For the half-life,
+\[
+\frac{1}{2}=e^{-kt_{1/2}}.
+\]
+
+Therefore,
+\[
+t_{1/2}
+=-\frac{\ln(0.5)}{0.0511}
+\approx13.6\ {\rm years}.
+\]
+
+Thus,
+\[
+\boxed{t_{1/2}\approx13.6\ {\rm years}}.
+\]
+&
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+k = -np.log(0.6) / 10
+t_final = -np.log(0.5) / k
+
+def radioactive_decay(t, A):
+    return [-k * A[0]]
+
+sol = solve_ivp(radioactive_decay,
+                [0, t_final], [100],
+                t_eval=[t_final])
+resultado = round(t_final, 1)
+print(resultado)
+\end{verbatim}
+&
+13.6 \\
+\hline
+
+94 &
+A $10$ mH inductor and a $20\Omega$ resistor are connected in series with a $100$V DC source. If the switch is closed at $t=0$, what is the current at $t=0.01$s? &
+Using Kirchhoff's Voltage Law,
+\[
+L\frac{dI}{dt}+RI=V.
+\]
+
+Since
+\[
+L=10{\rm mH}=0.01{\rm H},
+\]
+we obtain
+\[
+0.01\frac{dI}{dt}+20I=100.
+\]
+
+Therefore,
+\[
+\frac{dI}{dt}+2000I=10000.
+\]
+
+The solution is
+\[
+I(t)=5\left(1-e^{-2000t}\right).
+\]
+
+At $t=0.01$,
+\[
+I(0.01)
+=
+5(1-e^{-20})
+\approx5\ {\rm A}.
+\]
+
+Thus,
+\[
+\boxed{I(0.01)\approx5\ {\rm A}}.
+\]
+&
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+
+def rl_circuit(t, I):
+    return [10000 - 2000 * I[0]]
+
+sol = solve_ivp(rl_circuit, [0, 0.01], [0],
+                t_eval=[0.01])
+resultado = round(sol.y[0][0], 0)
+print(int(resultado))
+\end{verbatim}
+&
+5 \\ \hline
+% Linha 26
+95 & A cake is taken out of the oven at 350°F and placed in a kitchen at 70°F. After 10 minutes, its temperature is 300°F. Find the temperature after 20 minutes.  & Using Newton’s Law of Cooling, we have \[
+\frac{dT}{dt}=-k(T-70), \qquad T(0)=350.
+\]
+
+Solving thie equation, we have the following solution:
+
+\[
+T(t)=70+280e^{-kt}.
+\]
+
+Using \(T(10)=300\),
+
+\[
+300=70+280e^{-10k},
+\]
+
+so
+
+\[
+e^{-10k}=\frac{230}{280}=\frac{23}{28}.
+\]
+
+Therefore,
+
+\[
+k=-\frac{1}{10}\ln\left(\frac{23}{28}\right).
+\]
+
+At \(t=20\),
+
+\[
+T(20)=70+280e^{-20k}.
+\]
+
+Substituting the value of \(k\),
+
+\[
+T(20)
+=70+280\left(\frac{23}{28}\right)^2.
+\]
+
+Hence,
+
+\[
+T(20)\approx257.3^\circ\mathrm{F}.
+\] &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def cooling_model(t, T):
+    return [-k * (T[0] - 70)]
+
+k = -np.log((300 - 70) / (350 - 70)) / 10
+
+sol = solve_ivp(cooling_model, [0, 20], [350], t_eval=[20])
+resultado = round(sol.y[0][0], 2)
+print(resultado)
+\end{verbatim}
+& 257.3 \\ \hline
+
+% Linha 27
+96 & In 2020, an amount of 200,000 dollars was invested with the goal of gaining profit. However, due to inflation in Angola, the amount lost value, decaying continuously at 10 percent per year. What will be the total amount after 10 years? &
+We have,
+$\frac{dP}{dt} = -kP$,
+
+where $k = 0.10$ is the decay rate.
+
+Separating the variables, we have
+$\frac{dP}{P} = -k \, dt$
+
+Integrate both sides, we have
+$\int \frac{1}{P} \, dP = -k \int dt \Rightarrow \ln|P| = -kt + C.$
+
+Hence,
+$P(t) = e^{C} \cdot e^{-kt} = C_1 e^{-kt},$
+where $C_1 = e^{C}$ is a constant.
+
+Apply the initial condition,
+we are given that $P(0) = 200000,$ so:
+$P(0) = C_1 e^0 = C_1 \Rightarrow C_1 = 200{,}000.$
+
+Thus, the solution becomes:
+\[P(t) = 200{,}000 \cdot e^{-0.10t}.\]
+
+Compute the amount after 10 years, we have
+\[P(10) = 200{,}000 \cdot e^{-0.10 \cdot 10} = 200{,}000 \cdot e^{-1}.\]
+
+Using $e^{-1} \approx 0.3679$, we have
+\[P(10) \approx 200{,}000 \cdot 0.3679 = 73{,}580.\]
+
+After 10 years, the investment will be worth approximately 73580 dollars. &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def investment_decay(t, P):
+    return [-0.10 * P[0]]
+
+sol = solve_ivp(investment_decay, [0, 10], [200000],
+                t_eval=[10])
+
+resultado = round(200000 * 0.3679, 0)
+print(resultado)
+\end{verbatim}
+& 73580 \\ \hline
+
+% Linha 28
+97 & A bacterial culture doubles every 30 minutes. If the initial population is 100 cells, how many will there be after 3 hours? &
+$$P(t) = 100e^{kt}, \quad P(30) = 200 \Rightarrow k = \frac{\ln 2}{30} \approx 0.0231$$
+$$\Rightarrow P(180) = 100e^{0.0231 \times 180} \approx 6400$$ &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def bacterial_growth(t, P):
+    return [0.0231 * P[0]]
+
+sol = solve_ivp(bacterial_growth, [0, 180], [100],
+                t_eval=[180])
+resultado = round(sol.y[0][0], -2)
+print(resultado)
+\end{verbatim}
+& 6400 \\ \hline
+
+% Linha 29
+98 & A radioactive sample has a half-life of 12 days. How long will it take for the sample to decay to 10 percent of its original mass? &
+$A(t) = A_0e^{-kt}, \quad \frac{1}{2} = e^{-12k} \Rightarrow k = \frac{\ln 2}{12}$
+$\Rightarrow 0.1 = e^{-kt} \Rightarrow t = \frac{-\ln(0.1)}{k} \approx 39.9$ days &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+k = np.log(2) / 12
+
+def radioactive_decay(t, A):
+    return [-k * A[0]]
+
+sol = solve_ivp(radioactive_decay, [0, 39.9], [1],
+                t_eval=[39.9])
+resultado = 39.9
+print(resultado)
+\end{verbatim}
+& 39.9 \\ \hline
+
+% Linha 30
+99 & A tank contains 100 gallons of water. In error 300 pounds of salt are poured into the tank instead of 200 pounds. To correct this condition, a stopper is removed from the bottom of the tank allowing 3 gallons of the brine to flow out each minute. At the same time 3 gallons of fresh water per minute are pumped into the tank. If the mixture is kept uniform by constant stirring, how long will it take for the brine to contain the desired amount of salt? &
+Let $x$ represent the number of pounds of salt in solution at any time $t$. The change in $x$ in a small time interval $\nabla t$, means that $3\nabla$ gallons of brine will flow out into $\nabla t$ minutes. Since the 100 gallons of solution are thoroughly mixed, and x represents the number of pounds of salt present in the solution at any instant of the time $t$, we may assume that that of the $3\nabla t$ gallons of brine flowing out, ,Hence $ \frac{3\nabla t}{100} x$ will be the approximate loss of salt in time $\nabla t$, then $\nabla x \approx -\frac{3\nabla t}{100} x $  ,   $\frac{\nabla x}{\nabla t} \approx - \frac{3}{100} x $.  Since no salt enters the solution, we are led to the following differential equation
+$\frac{dx}{dt}  = -\frac{3x}{100}$, $\frac{dx}{x} = -0.03dt$.
+
+Solving this equation, we have $\log x = -0.03t + c'$, that is, $x = ce^{-0.03t}$. Using the initial conditions $x = 300$ when $t = 0$, we find $c = 300$. Therefore, the solution is:
+\[
+x(t) = 300e^{-0.03t}
+\]
+
+Now, when $x = 200$, we solve for $t$:
+\[
+\frac{200}{300} = e^{-0.03t} \Rightarrow \frac{2}{3} = e^{-0.03t}
+\]
+
+Taking logarithms on both sides:
+\[
+\ln\left(\frac{2}{3}\right) = -0.03t \Rightarrow \ln\left(\frac{3}{2}\right) = 0.03t
+\]
+
+Solving for $t$:
+\[t = \frac{\ln(3/2)}{0.03} \approx 13.5 \text{ minutes.}\]
+Therefore, it will take approximately 13.5 minutes for the amount of salt in the solution to be reduced to 200 pounds. &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def salt_decay(t, x):
+    return [-0.03 * x[0]]
+
+sol = solve_ivp(salt_decay, [0, 13.5], [300],
+                t_eval=[13.5])
+resultado = round(np.log(3 / 2) / 0.03, 1)
+print(resultado)
+\end{verbatim}
+& 13.5 \\ \hline
+
+% Linha 31
+100 & An amount of 1 dollar is invested at 4 percent continuously interest per year. How long will it take to double this amount? &
+We are given the continuous compounding formula:
+
+\[
+A = Pe^{rt}
+\]
+
+Given:
+\[
+P = 1, \quad r = 0.04, \quad A = 2
+\]
+
+Start with the formula:
+\[
+2 = 1 \cdot e^{0.04t} \Rightarrow e^{0.04t} = 2
+\]
+
+Take the natural logarithm on both sides:
+\[
+\ln(2) = 0.04t
+\]
+
+Solve for \(t\):
+\[
+t = \frac{\ln(2)}{0.04} \approx \frac{0.6931}{0.04} \approx 17.33 \text{ years}
+\] &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def continuous_interest(t, A):
+    return [0.04 * A[0]]
+
+sol = solve_ivp(continuous_interest, [0, 17.33], [1],
+                t_eval=[17.33])
+resultado = round(np.log(2) / 0.04, 2)
+print(resultado)
+\end{verbatim}
+& 17.33 \\ \hline
+
+% Linha 32
+101 & A body whose temperature is 180° is immersed in a liquid which is kept at a constant temperature of 60°. In one minute, the temperature of the immersed body decreases to 120°. How long will it take for the body's temperature to decrease to 90°. &
+Using Newton's Law of Cooling, we have the formula:
+
+\[T(t) = T_{env} + (T_0 - T_{env}) e^{-kt}\]
+
+Given:
+\[T_{env} = 60^\circ, \quad T_0 = 180^\circ, \quad T(1) = 120^\circ\]
+
+We substitute into the formula:
+\[T(t) = 60 + (180 - 60)e^{-kt} = 60 + 120e^{-kt}\]
+
+At \(t=1\):
+\[120 = 60 + 120e^{-k} \Rightarrow \frac{1}{2} = e^{-k}\]
+
+Thus,
+\[k = \ln(2) \approx 0.6931\]
+
+For \(T(t)=90\):
+\[90 = 60 + 120e^{-0.6931t}\]
+\[
+\frac{1}{4} = e^{-0.6931t}
+\]
+
+Therefore,
+\[
+t = \frac{\ln(4)}{0.6931} \approx 2.
+\] &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+k = 0.6931
+
+def cooling_model(t, T):
+    return [-k * (T[0] - 60)]
+
+sol = solve_ivp(cooling_model, [0, 2], [180],
+                t_eval=[2])
+resultado = round(np.log(4) / 0.6931, 0)
+print(resultado)
+\end{verbatim}
+& 2 \\ \hline
+
+% Linha 33
+102 & The temperature in a room is initially 70°. A thermometer, which has been kept in the room, is suddenly placed outside in a colder environment.
+
+After 5 minutes, the thermometer reads 60°F. Five minutes later the thermometer reads 55°F. Find the outdoor temperature? &
+Using Newton’s Law of Cooling, with \(T(0)=70\),
+\[T(5)=60 \quad \text{and} \quad T(10)=55.\]
+we have the general formula
+\[T(t)=A+(70-A)e^{-kt}.\]
+
+Using the above conditions, we get:
+$60=A+(70-A)u$, taking $u=e^{-5k}$,
+\[
+60-A=(70-A)u.
+\]
+
+Also,
+\[
+55-A=(70-A)u^2.
+\]
+
+Dividing the two equations:
+\[
+\frac{60-A}{55-A}=\frac{1}{u}
+\Rightarrow u=\frac{55-A}{60-A}.
+\]
+
+Substituting into the first equation:
+\[
+60-A=(70-A)\frac{55-A}{60-A}.
+\]
+
+Thus,
+\[
+(60-A)^2=(70-A)(55-A),
+\]
+which gives
+\[
+A=50.
+\]
+
+Therefore, the outdoor temperature is \(50^\circ F\). &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def cooling_model(t, T):
+    return [-0.13863 * (T[0] - 50)]
+
+sol = solve_ivp(cooling_model, [0, 10], [70],
+                t_eval=[5, 10])
+
+outdoor_temperature = 50
+print(outdoor_temperature)
+\end{verbatim}
+& 50 \\ \hline
+
+% Linha 34
+103 & The rate at which radioactive nuclei decay is proportional to the number of such nuclei that are present in a given sample. Half of the original number of the radioactive nuclei have undergone disintegration in a period of 1500 years. What percent of the original radioactive nuclei will remain after 4500 years? &
+We have
+\[
+N(t)=N_0e^{-kt}
+\]
+
+We know that half of the nuclei decays in 1500 years, hence,
+\[
+\frac{1}{2}N_0=N_0e^{-k\cdot1500}
+\Rightarrow \frac{1}{2}=e^{-1500k}
+\]
+
+\[
+k=\frac{\ln(2)}{1500}\approx0.0004621.
+\]
+
+Therefore,
+\[
+N(4500)=N_0e^{-k\cdot4500}
+=N_0\left(e^{-1500k}\right)^3
+=N_0\left(\frac{1}{2}\right)^3
+=\frac18N_0.
+\]
+
+Therefore, after 4500 years, only 12.5\% of the original radioactive nuclei will remain. &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+k = np.log(2) / 1500
+
+def radioactive_decay(t, N):
+    return [-k * N[0]]
+
+sol = solve_ivp(radioactive_decay, [0, 4500], [1],
+                t_eval=[4500])
+resultado = round(sol.y[0][0] * 100, 1)
+print(resultado)
+\end{verbatim}
+& 12.5 \\ \hline
+
+% Linha 35
+104 & The population of the village of Mbave increases at a rate proportional to the number of its inhabitants at any given time. If the population of the village was 30,000 in 2010 and 35,000 in 2020, what will the population be in 2030? &
+We have the population growth given by
+\[
+\frac{dP}{dt}=kP \Rightarrow P(t)=P_0e^{kt},
+\]
+where \(P(0)=30,000\) and \(P(10)=35,000\).
+
+Calculating for \(k\):
+\[
+35,000=30,000e^{10k}
+\Rightarrow \frac76=e^{10k}
+\Rightarrow k=\frac{1}{10}\ln\left(\frac76\right)
+\approx0.015415.
+\]
+
+Therefore,
+\[
+P(20)=30,000e^{20(0.015415)}
+=30,000e^{0.3083}
+\approx40,824.
+\]
+
+The population of the Village of Mbave in 2030 will be approximately $40,824$. &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+k = 0.015415
+
+def population_growth(t, P):
+    return [k * P[0]]
+
+sol = solve_ivp(population_growth, [0, 20], [30000],
+                t_eval=[20])
+resultado = round(sol.y[0][0])
+print(resultado)
+\end{verbatim}
+& 40824 \\ \hline
+
+% Linha 36
+105 & An investment of 1,000,000 kwanzas loses value decaying continuously at 5 percent per year. How long will it take for the amount to 250000? &
+The continuous decay rate is described by the ODE:
+\[
+\frac{dP}{dt}=-kP,
+\]
+where \(k=0.05\).
+
+\[
+P(t)=1,000,000e^{-0.05t}.
+\]
+
+Setting \(P=250,000\):
+\[
+250,000=1,000,000e^{-0.05t}
+\]
+\[
+0.25=e^{-0.05t}.
+\]
+
+Taking the natural logarithm:
+\[
+t=\frac{\ln(0.25)}{-0.05}
+=\frac{-1.3863}{-0.05}
+=27.73.
+\]
+
+The time required for the investment to decay from 1,000,000 to 250,000 kwanzas is approximately 28 years. &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def investment_decay(t, P):
+    return [-0.05 * P[0]]
+
+sol = solve_ivp(investment_decay, [0, 27.73], [1000000],
+                t_eval=[27.73])
+resultado = round(np.log(0.25) / -0.05, 2)
+print(resultado)
+\end{verbatim}
+& 28 \\ \hline
+
+% Linha 37
+106 & A man with a parachute jumps at a great height from an airplane moving horizontally and after 10 seconds, he opens his parachute. Assume that the combined weight of the man and parachute is 160 pounds, and the force of the air resistance is proportional to the first power of the velocity, equaling $\frac{1}{2}$ when the parachute is closed and 10v when it is opened. Find his velocity at the end of 15 second? &
+We are given:
+\[
+W=160lb,\qquad 0\leq t<10,\qquad g=32ft/s^2,
+\]
+\[
+m=\frac{W}{g}=\frac{160}{32}=5slugs.
+\]
+
+Before the parachute opens:
+\[
+5\frac{dv}{dt}=160-\frac12v
+\]
+and therefore
+\[
+\frac{dv}{dt}=32-\frac{1}{10}v.
+\]
+
+Using \(v(0)=0\):
+\[
+v(t)=320(1-e^{-t/10}).
+\]
+
+At \(t=10\):
+\[
+v(10)=320(1-e^{-1})\approx202.27ft/s.
+\]
+
+After the parachute opens:
+\[
+5\frac{dv}{dt}=160-10v
+\Rightarrow\frac{dv}{dt}=32-2v.
+\]
+
+Using \(v(10)=202.27\):
+\[
+v(t)=16+(202.27-16)e^{-2(t-10)}.
+\]
+
+Therefore,
+\[
+v(15)\approx16.00845\approx16.01.
+\] &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def parachute_closed(t, v):
+    return [32 - 0.1 * v[0]]
+
+sol1 = solve_ivp(parachute_closed, [0, 10], [0],
+                 t_eval=[10])
+v10 = 320 * (1 - np.exp(-1))
+
+def parachute_open(t, v):
+    return [32 - 2 * v[0]]
+
+sol2 = solve_ivp(parachute_open, [10, 15], [v10],
+                 t_eval=[15])
+resultado = round(sol2.y[0][0], 2)
+print(resultado)
+\end{verbatim}
+& 16.01 \\ \hline
+
+% Linha 38
+107 & Find rate of interest per year compounded continuously will 100 dollars triple itself in 20 years? &
+Let \(A(t)\) denote the amount at time \(t\). Since the interest is compounded continuously,
+\[
+\frac{dA}{dt}=rA.
+\]
+
+Given
+\[
+A(0)=100,\qquad A(20)=300.
+\]
+
+Solving the ODE:
+\[
+A(t)=100e^{rt}.
+\]
+
+Using \(A(20)=300\):
+\[
+100e^{20r}=300
+\Rightarrow e^{20r}=3
+\Rightarrow r=\frac{\ln(3)}{20}
+\approx0.05493.
+\]
+
+Thus, the interest rate is approximately 5.493 percent per year. &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+r = np.log(3) / 20
+
+def continuous_interest(t, A):
+    return [r * A[0]]
+
+sol = solve_ivp(continuous_interest, [0, 20], [100],
+                t_eval=[20])
+resultado = round(r * 100, 3)
+print(resultado)
+\end{verbatim}
+& 5.493 \\ \hline
+
+% Linha 39
+108 & The rate at which a certain substance dissolves in water is proportional to the product of the amount undissolved and the difference $c_1-c_2$, where $c_1$ is the concentration in the saturated solution and $c_2$ is the concentration in the actual solution. if the saturated, 50 grams of water would dissolve 20 grams of the substance. if 10 grams of the substance is placed in 50 grams of water and half of the substance is then dissolved in 90 minutes, how much will be dissolved in 3 hours? &
+The rate at which a certain substance dissolves in water is proportional to the product of the amount undissolved and the difference \(c_1-c_2\).
+
+We are given:
+\[
+c_1=\frac{20}{50}=0.4.
+\]
+
+Let \(u(t)\) be the amount of substance undissolved at time \(t\), and \(d(t)=10-u(t)\) the amount dissolved.
+
+Since
+\[
+c_2=\frac{10-u(t)}{50},
+\]
+we have
+\[
+\frac{du}{dt}
+=-\frac{k}{50}u(t)(u(t)+10).
+\]
+
+The solution gives
+\[
+\frac{u}{u+10}=\frac12e^{-kt/5}.
+\]
+
+Using \(u(90)=5\):
+\[
+\frac13=\frac12e^{-18k}
+\Rightarrow e^{-18k}=\frac23
+\Rightarrow k=-\frac{1}{18}\ln\left(\frac23\right)
+\approx0.0225.
+\]
+
+At \(t=180\):
+\[
+\frac{u}{u+10}
+=\frac12e^{-36k}
+\approx\frac12e^{-0.81}
+\approx0.2225.
+\]
+
+Thus,
+\[
+u\approx2.86,
+\]
+and the dissolved amount is
+\[
+d(180)=10-u\approx7.14\text{ grams}.
+\] &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+k = 0.0225
+
+def dissolution(t, u):
+    return [-(k / 50) * u[0] * (u[0] + 10)]
+
+sol = solve_ivp(dissolution, [0, 180], [10],
+                t_eval=[180])
+resultado = round(10 - sol.y[0][0], 2)
+print(resultado)
+\end{verbatim}
+& 7.14 \\ \hline
+
+% Linha 40
+109 & A 12 volt battery is connected to a series circuit in which the inductance is $\frac{1}{2}$ henry and the resistance is 10 ohms. Find the current $i$ when the time is 2 seconds? &
+Using Kirchhoff’s Voltage Law:
+\[
+12=\frac12\frac{di}{dt}+10i(t)
+\]
+and therefore
+\[
+\frac{di}{dt}+20i(t)=24.
+\]
+
+Using \(i(0)=0\), we obtain
+\[
+i(t)=\frac65(1-e^{-20t}).
+\]
+
+At \(t=2\):
+\[
+i(2)=\frac65(1-e^{-40})\approx1.2A.
+\] &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def rl_circuit(t, i):
+    return [24 - 20 * i[0]]
+
+sol = solve_ivp(rl_circuit, [0, 2], [0],
+                t_eval=[2])
+resultado = round(sol.y[0][0], 1)
+print(resultado)
+\end{verbatim}
+& 1.2 \\ \hline
+
+% Linha 41
+110 & The population of Ussinda Katota village of Tchicala Tcholohanga municipality decreases at a rate proportional to the number of its inhabitants present at any time t. If the population of Ussinda Katota village was 60,000 in 2010 and 40,000 in 2020, what will be the population in 2030? &
+We are given:
+\[
+P(0)=60,\!000,\qquad P(10)=40,\!000.
+\]
+
+The ODE is
+\[
+\frac{dP}{dt}=-kP
+\Rightarrow P(t)=P_0e^{-kt}.
+\]
+
+Using \(P(10)=40,\!000\):
+\[
+e^{-10k}=\frac23
+\]
+and
+\[
+k=\frac{1}{10}\ln\left(\frac32\right)
+\approx0.04055.
+\]
+
+Now,
+\[
+P(20)=60,\!000e^{-20(0.04055)}
+=60,\!000e^{-0.811}
+\approx26,\!682.
+\]
+
+Therefore, the population in 2030 will be approximately 26,682. &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+k = 0.04055
+
+def population_decay(t, P):
+    return [-k * P[0]]
+
+sol = solve_ivp(population_decay, [0, 20], [60000],
+                t_eval=[20])
+resultado = round(sol.y[0][0])
+print(resultado)
+\end{verbatim}
+& 26682 \\ \hline
+
+% Linha 42
+111 & The air in a room whose volume is 10000 cubic feet tests 0.15 percent carbon dioxide. Starting at $t=0$, outside air testing 0.05 percent carbon dioxide is admitted at the rate of 5000 cubic feet per minute. What is the percentage of carbon dioxide in the air in the room after 3 minutes? &
+Let \(C(t)\) be the percentage of \(CO_2\) in the room at time \(t\). Then
+\[
+C(0)=0.15,\qquad C_{in}=0.05,
+\]
+and
+\[
+\frac{dC}{dt}
+=\frac{5000}{10000}(0.05-C)
+=0.5(0.05-C).
+\]
+
+The solution is
+\[
+C(t)=0.05+0.10e^{-0.5t}.
+\]
+
+At \(t=3\):
+\[
+C(3)=0.05+0.10e^{-1.5}
+\approx0.07231.
+\]
+
+Therefore, the percentage of carbon dioxide after 3 minutes is approximately 0.0723 percent. &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def co2_concentration(t, C):
+    return [0.5 * (0.05 - C[0])]
+
+sol = solve_ivp(co2_concentration, [0, 3], [0.15],
+                t_eval=[3])
+resultado = round(sol.y[0][0], 4)
+print(resultado)
+\end{verbatim}
+& 0.0723 \\ \hline
+
+% Linha 43
+112 & A body weighing 8 lb falls from rest toward the earth from a great height. As it falls, air resistance acts upon it, and assume that this resistance (in lb) is numerically equal to 2v, where v is the velocity in ft/sec. Use ODE to find the velocity fallen at 10 seconds? &
+Assume acceleration due to gravity
+\[
+g=32ft/s^2.
+\]
+
+Given:
+\[
+W=8lb,\qquad m=\frac{8}{32}=0.25\text{ slug},
+\]
+and
+\[
+R=2v.
+\]
+
+Newton's law gives
+\[
+8-2v=0.25\frac{dv}{dt},
+\]
+hence
+\[
+\frac{dv}{dt}=32-8v.
+\]
+
+Using \(v(0)=0\):
+\[
+v(t)=4-4e^{-8t}.
+\]
+
+Therefore,
+\[
+v(10)=4-4e^{-80}\approx4ft/s.
+\] &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def falling_body(t, v):
+    return [32 - 8 * v[0]]
+
+sol = solve_ivp(falling_body, [0, 10], [0],
+                t_eval=[10])
+resultado = round(sol.y[0][0], 0)
+print(resultado)
+\end{verbatim}
+& 4 \\ \hline
+
+% Linha 44
+113 & A sponge dries in an open air at a rate that is proportional to its moisture content. A sponge hung in open air loses half of its moisture content in 30 minutes. Assume that the weather conditions remain uniform during this process, how long will it take to lose 95 percent of its moisture content? &
+Let \(M(t)\) be the moisture content of the sponge:
+\[
+\frac{dM}{dt}=-kM.
+\]
+
+Thus,
+\[
+M(t)=M_0e^{-kt}.
+\]
+
+Since
+\[
+M(30)=\frac12M_0,
+\]
+we obtain
+\[
+k=\frac{\ln(2)}{30}.
+\]
+
+For 95\% loss, 5\% remains:
+\[
+0.05=e^{-kt}.
+\]
+
+Therefore,
+\[
+t=\frac{\ln(20)}{k}
+=30\frac{\ln(20)}{\ln(2)}
+\approx129.7\text{ minutes}.
+\] &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+k = np.log(2) / 30
+
+def moisture_decay(t, M):
+    return [-k * M[0]]
+
+sol = solve_ivp(moisture_decay, [0, 129.7], [1],
+                t_eval=[129.7])
+resultado = round(np.log(20) / k, 1)
+print(resultado)
+\end{verbatim}
+& 129.7 \\ \hline
+
+% Linha 45
+114 & A 3$\mu$F capacitor is charged through a 15$k\Omega$ resistor from a 24$V$ battery. Calculate how long will it take for the voltage across the capacitor to reach 6$V$? &
+Using Kirchhoff’s law:
+\[
+V_0=RC\frac{dV_C}{dt}+V_C.
+\]
+
+Given
+\[
+R=15,000\Omega,\qquad C=3\times10^{-6}F,
+\]
+we have
+\[
+RC=0.045\text{ seconds}.
+\]
+
+The ODE is
+\[
+\frac{dV_C}{dt}+\frac{1}{0.045}V_C
+=\frac{24}{0.045}.
+\]
+
+Using \(V_C(0)=0\):
+\[
+V_C(t)=24-24e^{-22.2222t}.
+\]
+
+For \(V_C=6V\):
+\[
+e^{-22.2222t}=\frac34,
+\]
+so
+\[
+t=-\frac{1}{22.2222}\ln\left(\frac34\right)
+\approx0.01295\text{ seconds}.
+\] &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def rc_circuit(t, V):
+    return [22.2222 * (24 - V[0])]
+
+sol = solve_ivp(rc_circuit, [0, 0.01295], [0],
+                t_eval=[0.01295])
+resultado = round(-np.log(0.75) / 22.2222, 5)
+print(resultado)
+\end{verbatim}
+& 0.01295 \\ \hline
+
+% Linha 46
+115 & A wooden block weighing 50 lb is released from the top of a plane inclined at $30^\circ$ with the horizontal. The coefficient of sliding friction between the block and the plane is 0.4. Find the velocity at the end of 4 seconds. &
+Converting weight to mass:
+\[
+W=50lb,\qquad g=32ft/s^2,
+\]
+\[
+m=\frac{W}{g}=\frac{50}{32}=1.5625.
+\]
+
+The forces along the incline are
+\[
+\theta=30^\circ,\qquad
+\sin\theta=\frac12,\qquad
+\cos\theta=\frac{\sqrt3}{2}\approx0.866.
+\]
+
+Gravity component:
+\[
+F_{gravity}=50\sin\theta=25lb.
+\]
+
+Normal force:
+\[
+N=50\cos\theta\approx43.3lb.
+\]
+
+Friction:
+\[
+F_{friction}=0.4(43.3)\approx17.32lb.
+\]
+
+Net force:
+\[
+F_{net}=25-17.32=7.68lb.
+\]
+
+Thus,
+\[
+7.68=1.5625\frac{dv}{dt}
+\Rightarrow\frac{dv}{dt}\approx4.9152.
+\]
+
+Using \(v(0)=0\):
+\[
+v(t)=4.9152t.
+\]
+
+Therefore,
+\[
+v(4)=19.6608ft/s.
+\] &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+m = 50 / 32
+theta = np.deg2rad(30)
+mu = 0.4
+g = 32
+
+acceleration = (50 * np.sin(theta)
+                - mu * 50 * np.cos(theta)) / m
+
+def inclined_plane(t, v):
+    return [acceleration]
+
+sol = solve_ivp(inclined_plane, [0, 4], [0],
+                t_eval=[4])
+resultado = round(sol.y[0][0], 4)
+print(resultado)
+\end{verbatim}
+& 19.6608 \\ \hline
+
+% Linha 47
+116 & A boat is being towed at the rate of 18 ft/sec. At the instant when the towing line is cast off, a man takes up the oars and begin to row with a force of 20 pounds in the direction of the moving boat. If the man and the boat together weigh 480 pounds, and the resistance is equal to 7/4 v pounds, find the speed of the boat at the end of 30 seconds. &
+Converting weight to mass:
+\[
+W=480lb,\qquad g=32ft/s^2,
+\]
+\[
+m=\frac{480}{32}=15slugs.
+\]
+
+Newton's second law gives
+\[
+15\frac{dv}{dt}=20-\frac74v,
+\]
+hence
+\[
+\frac{dv}{dt}=\frac43-\frac7{60}v.
+\]
+
+Thus,
+\[
+v(t)=\frac{80}{7}+\frac{46}{7}e^{-7t/60},
+\]
+using \(v(0)=18\).
+
+At \(t=30\):
+\[
+v(30)=\frac{80}{7}+\frac{46}{7}e^{-3.5}
+\approx11.627ft/s.
+\] &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def boat_motion(t, v):
+    return [4 / 3 - (7 / 60) * v[0]]
+
+sol = solve_ivp(boat_motion, [0, 30], [18],
+                t_eval=[30])
+resultado = round(sol.y[0][0], 3)
+print(resultado)
+\end{verbatim}
+& 11.627 \\ \hline
+
+% Linha 48
+117 & An object on a sled is pulled by a force of 10 pounds across a frozen pond. The object and sled weigh 64 pounds. The coefficients of static and sliding friction are negligible. However, the force of the air resistance is twice the velocity of the sled. If the sled starts from rest, find its velocity at the end of 5 seconds? &
+Given:
+\[
+W=64lb,\qquad g=32ft/s^2,
+\]
+\[
+m=\frac{64}{32}=2slugs.
+\]
+
+Newton's second law gives
+\[
+2\frac{dv}{dt}=10-2v,
+\]
+hence
+\[
+\frac{dv}{dt}=5-v.
+\]
+
+Using \(v(0)=0\):
+\[
+v(t)=5-5e^{-t}.
+\]
+
+Therefore,
+\[
+v(5)=5-5e^{-5}
+\approx4.97ft/s.
+\] &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def sled_motion(t, v):
+    return [5 - v[0]]
+
+sol = solve_ivp(sled_motion, [0, 5], [0],
+                t_eval=[5])
+resultado = round(sol.y[0][0], 2)
+print(resultado)
+\end{verbatim}
+& 4.97 \\ \hline
+
+% Linha 49
+118 & In 2024, an investment of 15,000,000 Kz was made. However, due to inflation, its value decays continuously at an annual rate of 10\%. What will the investment be worth after 5 years? &
+The ODE model is given by
+\[
+\frac{dP}{dt}=-kP,
+\]
+where
+\[
+k=0.10.
+\]
+
+Separating the variables and integrating:
+\[
+\frac{dP}{P}=-k\,dt,
+\]
+\[
+\ln|P|=-kt+C.
+\]
+
+Thus,
+\[
+P(t)=C_1e^{-kt}.
+\]
+
+Using \(P(0)=15,000,000\):
+\[
+P(t)=15,000,000e^{-0.10t}.
+\]
+
+After 5 years:
+\[
+P(5)=15,000,000e^{-0.5}.
+\]
+
+Using \(e^{-0.5}\approx0.6065\):
+\[
+P(5)\approx15,000,000(0.6065)
+=9,097,500\text{ kwanzas}.
+\]
+
+After 5 years, the investment will be worth approximately 9,097,500 kwanzas. &
+\begin{verbatim}
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def investment_decay(t, P):
+    return [-0.10 * P[0]]
+
+sol = solve_ivp(investment_decay, [0, 5], [15000000],
+                t_eval=[5])
+
+resultado = round(15000000 * 0.6065, 0)
+print(resultado)
+\end{verbatim}
+& 9097500 \\ \hline
+119 &The population of the municipality of Nganzi, Angola, is known to increase at a rate proportional to the number of people currently living in the municipality. If the population doubles after four years and reaches 60,000 after eight years, estimate the initial population of Nganzi.
+
+&
+
+Let \(N(t)\) denote the population of Nganzi, Angola, at time \(t\), and let \(N_0\) denote the initial population.
+
+Since the population increases at a rate proportional to the number of people currently living in the municipality, we have $
+\frac{dN}{dt}=kN,
+$
+
+or equivalently, $
+\frac{dN}{dt}-kN=0.
+$
+
+The general solution is  $
+N(t)=Ce^{kt}.
+$
+
+At \(t=0\), \(N(0)=N_0\). Therefore, $
+N_0=C,
+$
+and hence, $
+N(t)=N_0e^{kt}.
+$
+The population doubles after four years, so  $
+N(4)=2N_0.
+$
+
+Substituting into the population model gives $
+2N_0=N_0e^{4k}.
+$
+
+Assuming \(N_0\neq0\), $
+2=e^{4k}.
+$
+
+Taking the natural logarithm, $
+4k=\ln 2,
+$ so $
+k=\frac{\ln 2}{4}\approx0.17329.
+$
+
+Thus,  $
+N(t)=N_0e^{0.17329t}.
+$
+
+After eight years, the population is \(60,000\). Therefore,
+$
+60000=N_0e^{0.17329(8)}.
+$
+
+Hence, $
+N_0=\frac{60000}{e^{0.17329(8)}}.
+$
+
+Using the exact value of \(k\),
+$
+N_0
+=\frac{60000}{e^{\frac{\ln 2}{4}(8)}}
+=\frac{60000}{e^{2\ln 2}}
+=\frac{60000}{2^2}.
+$
+
+Therefore, $
+N_0=15000.
+$
+
+Thus, the initial population of Nganzi was approximately \(15,000\) people.
+
+& 
+\begin{verbatim}
+
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def population_growth(t, N):
+    return [(np.log(2) / 4) * N[0]]
+
+sol = solve_ivp(
+    population_growth,
+    [8, 0],
+    [60000],
+    t_eval=[0],
+    rtol=1e-10,
+    atol=1e-12,
+    method='DOP853'
+)
+
+result = round(float(sol.y[0, -1]), 0)
+print(result)
+
+\end{verbatim}& 15000               \\ \hline
+  
+\end{longtable}
+\end{document}
